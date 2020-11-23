@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iEnvironment.RestAPI", "iEn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iEnvironment.Domain", "iEnvironment.Domain\iEnvironment.Domain.csproj", "{08F703F2-FB34-4C38-B84C-C102D65D5C29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iEnvironment.Tests", "iEnvironment.Tests\iEnvironment.Tests.csproj", "{51DDA7C9-FDB0-4D75-910D-83D8A272DDD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{08F703F2-FB34-4C38-B84C-C102D65D5C29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08F703F2-FB34-4C38-B84C-C102D65D5C29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08F703F2-FB34-4C38-B84C-C102D65D5C29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51DDA7C9-FDB0-4D75-910D-83D8A272DDD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51DDA7C9-FDB0-4D75-910D-83D8A272DDD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51DDA7C9-FDB0-4D75-910D-83D8A272DDD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51DDA7C9-FDB0-4D75-910D-83D8A272DDD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

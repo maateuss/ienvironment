@@ -1,5 +1,6 @@
 ﻿using System;
 using iEnvironment.Domain.Enums;
+using iEnvironment.Domain.Exceptions;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace iEnvironment.Domain.Models
@@ -10,6 +11,8 @@ namespace iEnvironment.Domain.Models
         public string Description { get; set; }
         public EquipmentDataType EntityType { get; set; }
         public string Topic { get; set; }
+        [BsonIgnore]
+        public bool Alive { get => IsAlive(); }
         public bool Connected { get; set; }
         public object CurrentValue { get; set; }
         [BsonIgnore]
@@ -18,5 +21,51 @@ namespace iEnvironment.Domain.Models
         public bool Enabled { get; set; }
         public bool SimulationMode { get; set; }
         public string Script { get; set; }
+        public DateTimeOffset KeepAlive { get; set; }
+
+        private int autoDisconnectSeconds = 300;
+
+        public int AutoDisconnectSeconds
+        {
+            get => autoDisconnectSeconds;
+            set
+            {
+                if(value < 0)
+                {
+                    throw new EquipmentMisconfiguratedException("AutoDisconnectSeconds must be a positive value!");
+                }
+
+                autoDisconnectSeconds = value;
+            }
+        } 
+
+        private bool IsAlive()
+        {
+            return DateTimeOffset.Now.Subtract(KeepAlive).TotalSeconds < AutoDisconnectSeconds;
+        }
+
+        public bool UpdateValue(object value, bool isConnecting)
+        {
+            if (!Enabled)
+            {
+                throw new EquipmentMisconfiguratedException("Equipment is disabled!");
+            }
+
+            if (!Alive && !isConnecting)
+            {
+                throw new EquipmentMisconfiguratedException("Equipment is not alive neither connecting!");
+            }
+
+            if (isConnecting)
+            {
+                KeepAlive = DateTimeOffset.Now;
+            }
+
+            UpdatedAt = DateTimeOffset.Now;
+            CurrentValue = value;
+            return true;
+        }
+
+
     }
 }
