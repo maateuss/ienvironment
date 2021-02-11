@@ -14,7 +14,7 @@ namespace BrokerMqtt
         private MongoClient mongoClient;
         private IMongoDatabase database;
         private IMongoCollection<User> collection;
-        public string BaseUrl { get; set; }
+        public static string BaseUrl { get; set; }
         public AuthenticationManager(string baseUrl = "localhost")
         {
             BaseUrl = baseUrl;
@@ -25,7 +25,7 @@ namespace BrokerMqtt
             {
                 if(_instance == null)
                 {
-                    _instance = new AuthenticationManager();
+                    _instance = new AuthenticationManager(BaseUrl);
                     _instance.Build();
                 }
 

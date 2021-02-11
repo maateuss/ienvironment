@@ -18,6 +18,7 @@ namespace iEnvironment.RestAPI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Settings.Configure(Configuration);
         }
 
         public IConfiguration Configuration { get; }
