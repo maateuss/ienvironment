@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="Enums\" />
     <Folder Include="Exceptions\" />
   </ItemGroup>

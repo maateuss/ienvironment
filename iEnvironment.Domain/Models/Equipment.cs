@@ -16,12 +16,12 @@ namespace iEnvironment.Domain.Models
         public bool Connected { get; set; }
         public object CurrentValue { get; set; }
         [BsonIgnore]
-        public Image Img { get; set; }
+        public Image Picture { get; set; }
         public string ImageId { get; set; }
         public bool Enabled { get; set; }
         public bool SimulationMode { get; set; }
         public string Script { get; set; }
-        public DateTimeOffset KeepAlive { get; set; }
+        public DateTime KeepAlive { get; set; }
 
         private int autoDisconnectSeconds = 300;
 
@@ -41,7 +41,7 @@ namespace iEnvironment.Domain.Models
 
         private bool IsAlive()
         {
-            return DateTimeOffset.Now.Subtract(KeepAlive).TotalSeconds < AutoDisconnectSeconds;
+            return DateTime.Now.Subtract(KeepAlive).TotalSeconds < AutoDisconnectSeconds;
         }
 
         public bool UpdateValue(object value, bool isConnecting)
@@ -58,10 +58,10 @@ namespace iEnvironment.Domain.Models
 
             if (isConnecting)
             {
-                KeepAlive = DateTimeOffset.Now;
+                KeepAlive = DateTime.Now;
             }
 
-            UpdatedAt = DateTimeOffset.Now;
+            UpdatedAt = DateTime.Now;
             CurrentValue = value;
             return true;
         }

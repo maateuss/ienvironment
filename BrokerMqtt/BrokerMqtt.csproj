@@ -26,4 +26,8 @@
     <PackageReference Include="MQTTnet" Version="3.0.14" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\iEnvironment.Domain\iEnvironment.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
