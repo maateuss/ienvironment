@@ -16,7 +16,7 @@ namespace iEnvironment.RestAPI
         public static void Configure(IConfiguration configuration)
         {
             mongoConnString = configuration["MongoCS"];
-            database = configuration["DatabaseName"];
+            database = configuration["Database"];
         }
     }
 }
