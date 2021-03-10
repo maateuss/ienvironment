@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using iEnvironment.Domain.Enums;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,5 +21,18 @@ namespace iEnvironment.Domain.Models
         public bool Enabled { get; set; }
         [BsonElement("img")]
         public Image img { get; set; }
+
+        public UserRole Role { get; set; }
+
+
+        public static bool ValidateNewUser(User user)
+        {
+            return true;
+        }
+
+        public static User ValidateUserUpdate(User user)
+        {
+            return user;
+        }
     }
 }

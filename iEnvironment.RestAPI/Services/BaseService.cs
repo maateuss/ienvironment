@@ -11,17 +11,17 @@ namespace iEnvironment.RestAPI.Services
     {
         private MongoClient mongoClient;
         private IMongoDatabase database;
-        private IMongoCollection<T> collection;
+        public IMongoCollection<T> Collection;
         public BaseService(string collectionName)
         {
             mongoClient = new MongoClient(Settings.MongoConnectionString);
             database = mongoClient.GetDatabase(Settings.Database);
-            collection = database.GetCollection<T>(collectionName);
+            Collection = database.GetCollection<T>(collectionName);
         }
 
         public async Task<T> FindByID(string id)
         {
-            return await collection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            return await Collection.Find(x => x.Id == id).FirstOrDefaultAsync();
         }
     }
 }
