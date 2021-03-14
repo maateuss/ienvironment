@@ -20,7 +20,7 @@ namespace iEnvironment.Domain.Models
         [BsonElement("enabled")]
         public bool Enabled { get; set; }
         [BsonElement("img")]
-        public Image img { get; set; }
+        public Image Img { get; set; }
 
         public UserRole Role { get; set; }
 

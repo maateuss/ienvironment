@@ -11,6 +11,9 @@ namespace iEnvironment.Domain.Models
     {
         [BsonElement("name")]
         public string Name { get; set; }
+
+        [BsonElement("description")]
+        public string Description { get; set; }
         [BsonElement("login")]
         public string Login { get; set; }
         [BsonElement("password")]
@@ -40,5 +43,18 @@ namespace iEnvironment.Domain.Models
             Equipments.Remove(id);
             return true;
         }
+
+        public static bool ValidateNewMCU(MicroController device)
+        {
+            return true;
+        }
+
+
+        public static MicroController ValidateMCUUpdate(MicroController device)
+        {
+            return device;
+        }
+
+
     }
 }
