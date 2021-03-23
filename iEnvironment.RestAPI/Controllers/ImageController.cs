@@ -38,6 +38,5 @@ namespace iEnvironment.RestAPI.Controllers
             return new OkObjectResult(result);
         }
 
-
     }
 }

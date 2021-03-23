@@ -14,16 +14,19 @@ namespace iEnvironment.Domain.Models
 
         [BsonElement("description")]
         public string Description { get; set; }
+
         [BsonElement("login")]
         public string Login { get; set; }
+
         [BsonElement("password")]
         public string Password { get; set; }
+
         [BsonElement("equipments")]
         public List<string> Equipments { get; set; }
+
         [BsonElement("enabled")]
         public bool Enabled { get; set; }
-        [BsonElement("img")]
-        public Image img { get; set; }
+
         public bool AddEquipment(string id)
         {
             if (Equipments.Any(x => x == id))

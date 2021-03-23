@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace iEnvironment.Domain.Models
 {
-    public class Equipment : BsonObject
+    public abstract class Equipment : BsonObject
     {
         [BsonElement("name")]
         public string Name { get; set; }
@@ -21,14 +21,11 @@ namespace iEnvironment.Domain.Models
         public bool Connected { get; set; }
         [BsonElement("currentValue")]
         public object CurrentValue { get; set; }
-        [BsonIgnore]
-        public Image Picture { get; set; }
         [BsonElement("enabled")]
         public bool Enabled { get; set; }
         [BsonElement("simulationMode")]
         public bool SimulationMode { get; set; }
-        [BsonElement("script")]
-        public string Script { get; set; }
+
         [BsonElement("keepAlive")]
         public DateTime KeepAlive { get; set; }
 
@@ -46,7 +43,10 @@ namespace iEnvironment.Domain.Models
 
                 autoDisconnectSeconds = value;
             }
-        } 
+        }
+
+        public abstract bool ValidateNew();
+        public abstract Equipment ValidateUpdate();
 
         private bool IsAlive()
         {

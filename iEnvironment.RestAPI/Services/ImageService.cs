@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
+using MongoDB.Driver;
 
 namespace iEnvironment.RestAPI.Services
 {
@@ -25,11 +28,24 @@ namespace iEnvironment.RestAPI.Services
             byte[] fileBytes = new byte[file.Length];
             file.OpenReadStream().Read(fileBytes, 0, int.Parse(file.Length.ToString()));
             var image = new Image();
-
+            var extension = Path.GetExtension(file.FileName);
             var fileName = DateTime.Now.ToLongTimeString().Replace(".", "").Replace(":", "").Replace(" ", "") + file.FileName;
+
+
+            StringBuilder sb = new StringBuilder();
+
+            using (HashAlgorithm algorithm = SHA256.Create()) {
+                foreach (var item in algorithm.ComputeHash(Encoding.UTF8.GetBytes(fileName)))
+                {
+                    sb.Append(item.ToString("X2"));
+                }
+                fileName = sb.ToString() + extension;
+
+            }
+            
             image.FileName = fileName;
             image.Size = Convert.ToInt32(file.Length);
-
+            image.Url = Settings.S3Prefix + image.FileName;
 
             PutObjectResponse response = null;
 
@@ -52,9 +68,11 @@ namespace iEnvironment.RestAPI.Services
                 throw new Exception("Erro na imagem");
             }
 
+            Collection.InsertOne(image);
 
+            var result = await Collection.Find(x => x.Url == image.Url).FirstOrDefaultAsync();
 
-            return image;
+            return result;
         }
 
     }
