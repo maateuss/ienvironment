@@ -24,10 +24,14 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.11.6" />
     <PackageReference Include="MQTTnet" Version="3.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.13" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\iEnvironment.Domain\iEnvironment.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="obj\" />
+  </ItemGroup>
 </Project>

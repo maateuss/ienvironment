@@ -1,5 +1,6 @@
 ﻿using iEnvironment.Domain.Models;
 using iEnvironment.RestAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace iEnvironment.RestAPI.Controllers
             userService = new UserService();
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<User> Get(string UserID)
         {
             return await userService.FindByID(UserID);
@@ -25,6 +27,7 @@ namespace iEnvironment.RestAPI.Controllers
 
 
         [HttpPost]
+        [Authorize("adm")]
         [Route("create")]
         public async Task<ActionResult> Create(User user)
         {
@@ -38,6 +41,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpGet]
         [Route("getByLogin/{login}")]
+        [AllowAnonymous]
         public async Task<ActionResult<User>> GetByLogin([FromRoute] string login)
         {
             var user = await userService.GetByLogin(login);
@@ -50,6 +54,7 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize("adm")]
         [Route("edit/{id}")]
         public async Task<ActionResult> EditUser([FromRoute] string id, [FromBody] User user)
         {
@@ -64,6 +69,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpPost]
         [Route("login")]
+        [AllowAnonymous]
         public async Task<ActionResult> Login([FromBody] LoginAttempt attempt)
         {
             var user = await userService.Authenticate(attempt);
@@ -72,7 +78,9 @@ namespace iEnvironment.RestAPI.Controllers
                 return new UnauthorizedResult();
             }
 
-            return Ok(user);
+            var token = CryptoService.GenerateJWT(user);
+
+            return Ok(new {user, token});
         }
 
     }

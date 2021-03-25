@@ -69,6 +69,7 @@ namespace iEnvironment.RestAPI.Services
             return true;
         }
 
+
         public async Task<User> Authenticate(LoginAttempt attempt)
         {
             var user = await GetByLogin(attempt.Login);
@@ -80,7 +81,7 @@ namespace iEnvironment.RestAPI.Services
             var valid = CryptoService.ValidatePassword(attempt.Password, user.Password);
             
             if (valid) 
-            { 
+            {
                 return user; 
             }
 

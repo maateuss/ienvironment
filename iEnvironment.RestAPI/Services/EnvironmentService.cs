@@ -36,6 +36,18 @@ namespace iEnvironment.RestAPI.Services
 
         }
 
+        public async Task<bool> RemoveEquipmentReference(string id)
+        {
+            var Environments = await Collection.Find(x => x.Equipments.Any(y => y.Contains(id))).ToListAsync();
+            foreach (var item in Environments)
+            {
+                item.RemoveEquipment(id);
+                await Collection.FindOneAndReplaceAsync(x => x.Id == item.Id, item);
+            }
+            return true;
+        }
+
+
         public async Task<bool> EditEnvironment(string id, Environments env)
         {
             var currentEnvironment = await Collection.Find(x => x.Id == id).FirstOrDefaultAsync();

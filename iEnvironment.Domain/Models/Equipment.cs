@@ -14,7 +14,13 @@ namespace iEnvironment.Domain.Models
         [BsonElement("entityType")]
         public EquipmentDataType EntityType { get; set; }
         [BsonElement("topic")]
-        public string Topic { get; set; }
+        public string Topic { get => GetTopic(); }
+
+        private string GetTopic()
+        {
+            return $"sinal/{MicrocontrollerID}/{Id}/";
+        }
+
         [BsonIgnore]
         public bool Alive { get => IsAlive(); }
         [BsonElement("connected")]
@@ -28,6 +34,9 @@ namespace iEnvironment.Domain.Models
 
         [BsonElement("keepAlive")]
         public DateTime KeepAlive { get; set; }
+
+        [BsonElement("microcontrollerId")]
+        public string MicrocontrollerID { get; set; }
 
         private int autoDisconnectSeconds = 300;
         [BsonElement("autoDisconnectSeconds")]
@@ -47,7 +56,6 @@ namespace iEnvironment.Domain.Models
 
         public abstract bool ValidateNew();
         public abstract Equipment ValidateUpdate();
-
         private bool IsAlive()
         {
             return DateTime.Now.Subtract(KeepAlive).TotalSeconds < AutoDisconnectSeconds;

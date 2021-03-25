@@ -1,5 +1,7 @@
 ﻿using iEnvironment.Domain.Enums;
+using iEnvironment.Domain.Extensions;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,6 +26,10 @@ namespace iEnvironment.Domain.Models
 
         public UserRole Role { get; set; }
 
+        public string GetClaimAttribute()
+        {
+            return Role.GetDescription();
+        }
 
         public static bool ValidateNewUser(User user)
         {

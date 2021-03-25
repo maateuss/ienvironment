@@ -10,6 +10,8 @@ namespace iEnvironment.Domain.Models
         [BsonElement("lastSignalReceivedTime")]
         public DateTime LastSignalReceivedTime { get; set; }
 
+      
+
         public override bool ValidateNew()
         {
             return true;

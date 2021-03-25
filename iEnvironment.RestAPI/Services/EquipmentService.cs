@@ -13,12 +13,12 @@ namespace iEnvironment.RestAPI.Services
 
         }
 
-        public async Task<bool> Create(T equipment)
+        public async Task<T> Create(T equipment)
         {
             var duplicate = await Collection.Find(x => x.Id == equipment.Id).FirstOrDefaultAsync();
             if (duplicate != null)
             {
-                return false;
+                return null;
 
             }
 
@@ -29,7 +29,7 @@ namespace iEnvironment.RestAPI.Services
                 Collection.InsertOne(equipment);
             }
 
-            return valid;
+            return await Collection.Find(x =>x.Id == equipment.Id).FirstOrDefaultAsync();
         }
 
         public async Task<bool> Update(string id, T equipment)
@@ -44,6 +44,12 @@ namespace iEnvironment.RestAPI.Services
             var equipmentToUpdate = equipment.ValidateUpdate();
 
 
+            return true;
+        }
+
+        public async Task<bool> Delete(string id)
+        {
+            await Collection.FindOneAndDeleteAsync(x => x.Id == id);
             return true;
         }
 

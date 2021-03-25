@@ -15,6 +15,7 @@ namespace iEnvironment.RestAPI
         public static string AccessSecret { get => accessSecret; }
         public static string Bucket { get => bucket; }
         public static string S3Prefix { get => s3prefix; }
+        public static string Secret { get => secret; }
         private static string mongoConnString { get; set; }
         private static string database { get; set; }
         private static int workFactor { get; set; }
@@ -22,6 +23,7 @@ namespace iEnvironment.RestAPI
         private static string s3prefix { get; set; }
         private static string accessSecret { get; set; }
         private static string bucket { get; set; }
+        private static string secret { get; set; }
         public static void Configure(IConfiguration configuration)
         {
             mongoConnString = configuration["MongoCS"];
@@ -31,6 +33,7 @@ namespace iEnvironment.RestAPI
             accessSecret = configuration["AccessSecret"];
             bucket = configuration["bucket"];
             s3prefix = configuration["s3prefix"];
+            secret = configuration["secret"];
         }
     }
 }

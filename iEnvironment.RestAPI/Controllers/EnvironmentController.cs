@@ -1,5 +1,6 @@
 ﻿using iEnvironment.Domain.Models;
 using iEnvironment.RestAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace iEnvironment.RestAPI.Controllers
             environmentService = new EnvironmentService();
         }
         [HttpGet]
+        [Authorize]
         public async Task<Environments> Get(string EnvironmentID)
         {
             return await environmentService.FindByID(EnvironmentID);
@@ -25,6 +27,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpGet]
         [Route("GetAll")]
+        [Authorize]
         public async Task<IEnumerable<Environments>> GetAll()
         {
             return await environmentService.FindAll();
@@ -34,8 +37,11 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpPost]
         [Route("create")]
+        [Authorize(Roles = "adm")]
         public async Task<ActionResult> Create(Environments environment)
         {
+
+
             var created = await environmentService.CreateNew(environment);
             if (created)
             {
@@ -48,6 +54,8 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpPut]
         [Route("edit/{id}")]
+        [Authorize(Roles = "adm")]
+
         public async Task<ActionResult> EditEnvironment([FromRoute] string id, [FromBody] Environments environment)
         {
             var edited = await environmentService.EditEnvironment(id, environment);

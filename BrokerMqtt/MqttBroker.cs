@@ -11,17 +11,31 @@ namespace BrokerMqtt
     public class MqttBroker
     {
         private int Port { get; set; }
-        private AuthenticationManager Authentication { get; }
+        private DatabaseService DatabaseService { get; }
+        private CacheService cache { get; set; }
+        private ClientDisconnected BrokerEvents { get; set; }
         public MqttBroker(int port, string dbUrl)
         {
             Port = port;
-            Authentication = new AuthenticationManager(dbUrl);
+            DatabaseService = new DatabaseService(dbUrl);
+            cache = new CacheService();
+            BrokerEvents = new ClientDisconnected();
+            BrokerEvents.Disconnected += BrokerEvents_Disconnected;
         }
+
+        private void BrokerEvents_Disconnected(object sender, MqttServerClientDisconnectedEventArgs args)
+        {
+            var mcu = cache.RegisterDisconnection(args.ClientId);
+            DatabaseService.ChangeConnectionStatus(mcu, false);
+        }
+
         public void Start()
         {
+
+            DatabaseService.Setup();
             var optionsBuilder = new MqttServerOptionsBuilder().WithDefaultEndpoint().WithDefaultEndpointPort(Port).WithConnectionValidator(async u =>
             {
-                
+
                 if (String.IsNullOrWhiteSpace(u.Password) || String.IsNullOrWhiteSpace(u.Username))
                 {
                     u.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
@@ -29,12 +43,13 @@ namespace BrokerMqtt
                 }
                 else
                 {
-                    var valid = await Authentication.ValidateUser(u.Username, u.Password);
-                    u.ReasonCode = valid ? MqttConnectReasonCode.Success : MqttConnectReasonCode.BadUserNameOrPassword;
-                    
+                    var microcontroller = await DatabaseService.ValidateUser(u.Username, u.Password);
+                    u.ReasonCode = microcontroller != null ? MqttConnectReasonCode.Success : MqttConnectReasonCode.BadUserNameOrPassword;
+                    cache.RegisterConnection(u.ClientId, microcontroller);
+                    DatabaseService.ChangeConnectionStatus(microcontroller, true);
                 }
 
-                
+
 
 
             }).WithSubscriptionInterceptor(u =>
@@ -47,18 +62,21 @@ namespace BrokerMqtt
                 return;
             }).WithApplicationMessageInterceptor(u =>
             {
-                if (u.ApplicationMessage.Payload.Length > 200)
+                if (u.ApplicationMessage.Payload != null)
                 {
-                    u.AcceptPublish = false;
+                    if (u.ApplicationMessage.Payload.Length > 200)
+                    {
+                        u.AcceptPublish = false;
+                    }
                 }
                 u.AcceptPublish = true;
+                Console.WriteLine($"{u.ApplicationMessage.ConvertPayloadToString()}");
                 return;
 
-            });
-
+            }); 
             var mqttServer = new MqttFactory().CreateMqttServer();
             mqttServer.StartAsync(optionsBuilder.Build());
-            
+            mqttServer.ClientDisconnectedHandler = BrokerEvents;
         }
 
     }
