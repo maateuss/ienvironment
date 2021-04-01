@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -15,6 +16,9 @@ namespace iEnvironment.Domain.Models
         [BsonElement("description")]
         public string Description { get; set; }
 
+        [BsonElement("connected")]
+        public bool Connected { get; set; } = false;
+
         [BsonElement("login")]
         public string Login { get; set; }
 
@@ -22,7 +26,7 @@ namespace iEnvironment.Domain.Models
         public string Password { get; set; }
 
         [BsonElement("equipments")]
-        public List<string> Equipments { get; set; }
+        public List<string> Equipments { get; set; } = new List<string>();
 
         [BsonElement("enabled")]
         public bool Enabled { get; set; }
@@ -57,7 +61,6 @@ namespace iEnvironment.Domain.Models
         {
             return device;
         }
-
 
     }
 }

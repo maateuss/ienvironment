@@ -16,5 +16,14 @@ namespace iEnvironment.Domain.Models
         [BsonElement("limitDown")]
         public object LimitDown { get; set; }
 
+        public override bool ValidateNew()
+        {
+            return true;
+        }
+
+        public override Equipment ValidateUpdate()
+        {
+            return this;
+        }
     }
 }

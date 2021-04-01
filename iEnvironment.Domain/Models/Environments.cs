@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace iEnvironment.Domain.Models
@@ -21,6 +22,26 @@ namespace iEnvironment.Domain.Models
         public bool Enabled { get; set; }
         [BsonElement("img")]
         public Image Img { get; set; }
+
+        public bool AddEquipment(string id)
+        {
+            if (Equipments.Any(x => x == id))
+            {
+                return false;
+            }
+            Equipments.Add(id);
+            return true;
+        }
+
+        public bool RemoveEquipment(string id)
+        {
+            if (!Equipments.Any(x => x == id))
+            {
+                return false;
+            }
+            Equipments.Remove(id);
+            return true;
+        }
 
 
         public static bool ValidateNewEnvironment(Environments env)

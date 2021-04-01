@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iEnvironment.Domain", "iEnv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iEnvironment.Tests", "iEnvironment.Tests\iEnvironment.Tests.csproj", "{51DDA7C9-FDB0-4D75-910D-83D8A272DDD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrokerMqtt", "BrokerMqtt\BrokerMqtt.csproj", "{FDE10CA6-170C-4CE7-B636-0F416BA50417}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrokerMqtt", "BrokerMqtt\BrokerMqtt.csproj", "{FA13C7F2-EA65-4A7D-86BF-9FD70EE674E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{51DDA7C9-FDB0-4D75-910D-83D8A272DDD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51DDA7C9-FDB0-4D75-910D-83D8A272DDD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51DDA7C9-FDB0-4D75-910D-83D8A272DDD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDE10CA6-170C-4CE7-B636-0F416BA50417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FDE10CA6-170C-4CE7-B636-0F416BA50417}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDE10CA6-170C-4CE7-B636-0F416BA50417}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FDE10CA6-170C-4CE7-B636-0F416BA50417}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA13C7F2-EA65-4A7D-86BF-9FD70EE674E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA13C7F2-EA65-4A7D-86BF-9FD70EE674E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA13C7F2-EA65-4A7D-86BF-9FD70EE674E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA13C7F2-EA65-4A7D-86BF-9FD70EE674E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

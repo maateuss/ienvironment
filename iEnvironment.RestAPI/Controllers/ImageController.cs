@@ -1,5 +1,6 @@
 ﻿using iEnvironment.Domain.Models;
 using iEnvironment.RestAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,6 +23,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpPost]
         [Route("UploadPhoto")]
+        [Authorize]
         public async Task<ActionResult<Image>> UploadImage([FromForm] IFormFile file)
         {
             if(file == null)
