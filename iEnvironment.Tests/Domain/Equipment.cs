@@ -6,13 +6,26 @@ using Xunit;
 
 namespace iEnvironment.Tests.Domain
 {
+    public class MockedEqp : Equipment
+    {
+        public override bool ValidateNew()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Equipment ValidateUpdate()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class EquipmentTests
     {
         [Fact]
         public void CriarEquipamento()
         {
             //Arrange
-            var equipamento = new Equipment{ Enabled = true };
+            var equipamento = new MockedEqp{ Enabled = true };
 
             //Act
             equipamento.UpdateValue("teste", true);
@@ -25,7 +38,7 @@ namespace iEnvironment.Tests.Domain
         public void EquipamentoDeveMudarDeEstadoAposAutoDisconnect()
         {
             //Arrange
-            var equipamento = new Equipment { Enabled = true, AutoDisconnectSeconds = 1 };
+            var equipamento = new MockedEqp { Enabled = true, AutoDisconnectSeconds = 1 };
 
             equipamento.UpdateValue("teste", true);
 
@@ -43,7 +56,7 @@ namespace iEnvironment.Tests.Domain
         public void EquipamentoNaoPodeAceitarAutoDisconnectNegativo()
         {
             //Arrange
-            var equipamento = new Equipment();
+            var equipamento = new MockedEqp();
 
             //Assert
 

@@ -7,27 +7,32 @@ using System.Text;
 using System.Threading.Tasks;
 using iEnvironment.Domain.Models;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 
 namespace iEnvironment.RestAPI.Services
 {
-    public class CryptoService
+    public class CryptoService : BaseService<RefreshToken>
     {
-        private static string GenerateSalt()
+        public CryptoService() : base("tokens")
+        {
+
+        }
+        private string GenerateSalt()
         {
             return BCrypt.Net.BCrypt.GenerateSalt(Settings.WorkFactor);
         }
-        public static string HashPassword(string password)
+        public string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password, GenerateSalt());
         }
 
-        public static bool ValidatePassword(string password, string hash)
+        public bool ValidatePassword(string password, string hash)
         {
             return BCrypt.Net.BCrypt.Verify(password, hash);
         }
 
 
-        public static string GenerateJWT(User User)
+        public string GenerateJWT(User User)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
@@ -40,11 +45,35 @@ namespace iEnvironment.RestAPI.Services
                }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                
+
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
 
+        public async Task<RefreshToken> GenerateRefreshToken(User user)
+        {
+            var token = new RefreshToken(TimeSpan.FromHours(Settings.RefreshTokerValidationHours), user.Id);
+
+            await Collection.InsertOneAsync(token);
+            return token;
+        }
+
+        public async Task<RefreshToken> RetrieveRefreshToken(string token)
+        {
+            return await Collection.Find(x => x.Value == token).FirstAsync();
+        }
+
+        public async Task<bool> RevokeTokens(string userid)
+        {
+            var tokens = await Collection.Find(x => x.UserID == userid).ToListAsync();
+
+            foreach (var item in tokens)
+            {
+                await Collection.DeleteOneAsync(x => x.Id == item.Id);
+            }
+
+            return true;
+        }
     }
 }

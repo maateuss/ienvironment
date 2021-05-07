@@ -11,6 +11,7 @@ namespace iEnvironment.RestAPI
         public static string MongoConnectionString { get => mongoConnString; }
         public static string Database { get => database; }
         public static int WorkFactor { get => workFactor; }
+        public static int RefreshTokerValidationHours { get => refreshTokerValidationHours; }
         public static string AccessKey { get => accessKey; }
         public static string AccessSecret { get => accessSecret; }
         public static string Bucket { get => bucket; }
@@ -19,6 +20,7 @@ namespace iEnvironment.RestAPI
         private static string mongoConnString { get; set; }
         private static string database { get; set; }
         private static int workFactor { get; set; }
+        private static int refreshTokerValidationHours { get; set; }
         private static string accessKey { get; set; }
         private static string s3prefix { get; set; }
         private static string accessSecret { get; set; }
@@ -34,6 +36,7 @@ namespace iEnvironment.RestAPI
             bucket = configuration["bucket"];
             s3prefix = configuration["s3prefix"];
             secret = configuration["secret"];
+            refreshTokerValidationHours = int.Parse(configuration["refreshTokenValidationHours"]);
         }
     }
 }

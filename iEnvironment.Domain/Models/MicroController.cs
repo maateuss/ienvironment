@@ -51,15 +51,15 @@ namespace iEnvironment.Domain.Models
             return true;
         }
 
-        public static bool ValidateNewMCU(MicroController device)
+        public bool ValidateNewMCU()
         {
             return true;
         }
 
 
-        public static MicroController ValidateMCUUpdate(MicroController device)
+        public MicroController ValidateMCUUpdate()
         {
-            return device;
+            return this;
         }
 
     }

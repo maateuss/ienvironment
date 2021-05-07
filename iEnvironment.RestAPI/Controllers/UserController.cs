@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace iEnvironment.RestAPI.Controllers
@@ -14,9 +15,11 @@ namespace iEnvironment.RestAPI.Controllers
     public class UserController : ControllerBase
     {
         private UserService userService;
+        private CryptoService cryptoService;
         public UserController()
         {
             userService = new UserService();
+            cryptoService = new CryptoService();
         }
         [HttpGet]
         [AllowAnonymous]
@@ -45,7 +48,7 @@ namespace iEnvironment.RestAPI.Controllers
         public async Task<ActionResult<User>> GetByLogin([FromRoute] string login)
         {
             var user = await userService.GetByLogin(login);
-            if(user == null)
+            if (user == null)
             {
                 return new NotFoundResult();
             }
@@ -73,14 +76,34 @@ namespace iEnvironment.RestAPI.Controllers
         public async Task<ActionResult> Login([FromBody] LoginAttempt attempt)
         {
             var user = await userService.Authenticate(attempt);
-            if(user == null)
+            if (user == null)
             {
                 return new UnauthorizedResult();
             }
 
-            var token = CryptoService.GenerateJWT(user);
+            var token = cryptoService.GenerateJWT(user);
+            var refreshToken = await cryptoService.GenerateRefreshToken(user);
+            return Ok(new { user, token, refreshToken= refreshToken.Value });
+        }
 
-            return Ok(new {user, token});
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("me")]
+        public async Task<ActionResult> Me([FromHeader] string authorization)
+        {
+            if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
+            {
+                var token = await cryptoService.RetrieveRefreshToken(headerValue.Parameter);
+                if (token.IsValid())
+                {
+                    var user = await userService.FindByID(token.UserID);
+                    var newToken =  cryptoService.GenerateJWT(user);
+                    return Ok(new { user, token= newToken, refreshToken = headerValue.Parameter });
+                }
+            }
+
+            return new BadRequestResult();
+
         }
 
     }
