@@ -33,7 +33,7 @@ namespace BrokerMqtt
                 Thread.Sleep(0);
             }
 
-            Console.WriteLine("Finalizando os trabsons");
+            Console.WriteLine("Finalizando o processo");
 
         
             //var mongoClient = new MongoClient();
