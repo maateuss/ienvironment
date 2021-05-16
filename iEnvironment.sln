@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.808.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iEnvironment.RestAPI", "iEnvironment.RestAPI\iEnvironment.RestAPI.csproj", "{3C4BE80F-CB04-4113-B91B-20762EF60283}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iEnvironment.RestAPI", "iEnvironment.RestAPI\iEnvironment.RestAPI.csproj", "{3C4BE80F-CB04-4113-B91B-20762EF60283}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iEnvironment.Domain", "iEnvironment.Domain\iEnvironment.Domain.csproj", "{08F703F2-FB34-4C38-B84C-C102D65D5C29}"
 EndProject

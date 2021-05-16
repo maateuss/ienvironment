@@ -47,11 +47,6 @@ namespace iEnvironment.RestAPI.Services
             return true;
         }
 
-        public async Task<bool> Delete(string id)
-        {
-            await Collection.FindOneAndDeleteAsync(x => x.Id == id);
-            return true;
-        }
-
+      
     }
 }

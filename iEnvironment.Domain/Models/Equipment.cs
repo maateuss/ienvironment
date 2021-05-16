@@ -33,6 +33,7 @@ namespace iEnvironment.Domain.Models
         public bool SimulationMode { get; set; }
 
         [BsonElement("keepAlive")]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime KeepAlive { get; set; }
 
         [BsonElement("microcontrollerId")]

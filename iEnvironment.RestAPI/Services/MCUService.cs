@@ -9,9 +9,10 @@ namespace iEnvironment.RestAPI.Services
 {
     public class MCUService : BaseService<MicroController>
     {
+        private CryptoService cryptoService;
         public MCUService() : base("microcontrollers")
         {
-
+            cryptoService = new CryptoService();
 
         }
         public async Task<bool> CreateNew(MicroController device)
@@ -34,13 +35,13 @@ namespace iEnvironment.RestAPI.Services
             }
 
 
-            var isValid = MicroController.ValidateNewMCU(device);
+            var isValid = device.ValidateNewMCU();
             if (!isValid)
             {
                 return false;
             }
 
-            device.Password = CryptoService.HashPassword(device.Password);
+            device.Password = cryptoService.HashPassword(device.Password);
 
             Collection.InsertOne(device);
             return true;
@@ -63,7 +64,7 @@ namespace iEnvironment.RestAPI.Services
             var currentMicroController = await Collection.Find(x => x.Id == id).FirstOrDefaultAsync();
             if (currentMicroController == null) return false;
 
-            var validUpdate = MicroController.ValidateMCUUpdate(device);
+            var validUpdate = device.ValidateMCUUpdate();
             if (validUpdate != null)
             {
                 await Collection.FindOneAndReplaceAsync(x => x.Id == id, validUpdate);
@@ -71,17 +72,6 @@ namespace iEnvironment.RestAPI.Services
             }
 
             return false;
-        }
-
-        internal async  Task<bool> Delete(string id)
-        {
-            var MCU = await Collection.Find(x => x.Id == id).FirstOrDefaultAsync();
-
-            if (MCU == null) return false;
-
-            await Collection.FindOneAndDeleteAsync(x => x.Id == id);
-
-            return true;
         }
 
         internal async Task UpdateEquipmentReference(string oldId, string newId, string eqpId)

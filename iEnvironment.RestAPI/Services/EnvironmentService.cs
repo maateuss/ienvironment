@@ -25,7 +25,7 @@ namespace iEnvironment.RestAPI.Services
                     return false;
                 }
             }
-            if (!Environments.ValidateNewEnvironment(env))
+            if (!env.ValidateNewEnvironment())
             {
                 return false;
             }
@@ -57,7 +57,7 @@ namespace iEnvironment.RestAPI.Services
                 return false;
             }
 
-            var validEnvironment = Environments.ValidateEnvironmentUpdate(env);
+            var validEnvironment = env.ValidateEnvironmentUpdate();
 
             if (validEnvironment == null)
             {

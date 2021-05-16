@@ -28,5 +28,16 @@ namespace iEnvironment.RestAPI.Services
         {
             return await Collection.Find(x => x.Id == id).FirstOrDefaultAsync();
         }
+
+        public async Task<bool> Delete(string id)
+        {
+            var entity = Collection.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+
+            if (entity == null) return false;
+
+            await Collection.FindOneAndDeleteAsync(x => x.Id == id);
+            return true;
+        }
     }
 }

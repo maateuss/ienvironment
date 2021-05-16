@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,7 @@ namespace iEnvironment.RestAPI
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+               
             }).AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
@@ -47,6 +49,17 @@ namespace iEnvironment.RestAPI
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false
+                };
+                x.Events = new JwtBearerEvents { 
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            context.Response.Headers.Add("Token-Expired", "True");
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
             services.AddSwaggerGen(c =>
@@ -72,7 +85,14 @@ namespace iEnvironment.RestAPI
                     }
                 });
             });
-
+            services.AddCors(c =>
+            {
+                c.AddPolicy("iEnvironment Policy", builder =>
+                {
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyOrigin();
+                });
+            });
 
         }
 
@@ -95,6 +115,8 @@ namespace iEnvironment.RestAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("iEnvironment Policy");
 
             app.UseAuthentication();
             app.UseAuthorization();

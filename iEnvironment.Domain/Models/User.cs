@@ -31,14 +31,14 @@ namespace iEnvironment.Domain.Models
             return Role.GetDescription();
         }
 
-        public static bool ValidateNewUser(User user)
+        public bool ValidateNewUser()
         {
             return true;
         }
 
-        public static User ValidateUserUpdate(User user)
+        public User ValidateUserUpdate()
         {
-            return user;
+            return this;
         }
     }
 }

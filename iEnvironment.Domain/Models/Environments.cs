@@ -44,14 +44,14 @@ namespace iEnvironment.Domain.Models
         }
 
 
-        public static bool ValidateNewEnvironment(Environments env)
+        public bool ValidateNewEnvironment()
         {
             return true;
         }
 
-        public static Environments ValidateEnvironmentUpdate(Environments env)
+        public Environments ValidateEnvironmentUpdate()
         {
-            return env;
+            return this;
         }
 
     }

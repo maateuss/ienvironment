@@ -11,9 +11,10 @@ namespace iEnvironment.RestAPI.Services
     {
         public UserService() : base("users")
         {
-            
+            cryptoService = new CryptoService();
         }
 
+        private CryptoService cryptoService;
         public async Task<bool> CreateNew(User user)
         {
             if (!String.IsNullOrWhiteSpace(user.Id))
@@ -32,12 +33,12 @@ namespace iEnvironment.RestAPI.Services
                 return false;
             }
 
-            if (!User.ValidateNewUser(user))
+            if (!user.ValidateNewUser())
             {
                 return false;
             }
 
-            user.Password = CryptoService.HashPassword(user.Password);
+            user.Password = cryptoService.HashPassword(user.Password);
 
             Collection.InsertOne(user);
 
@@ -58,7 +59,7 @@ namespace iEnvironment.RestAPI.Services
                 return false;
             }
             
-            var validUser = User.ValidateUserUpdate(user);
+            var validUser = user.ValidateUserUpdate();
             
             if (validUser == null)
             {
@@ -78,7 +79,7 @@ namespace iEnvironment.RestAPI.Services
                 return null;
             }
 
-            var valid = CryptoService.ValidatePassword(attempt.Password, user.Password);
+            var valid = cryptoService.ValidatePassword(attempt.Password, user.Password);
             
             if (valid) 
             {
