@@ -33,7 +33,7 @@ namespace BrokerMqtt
         {
 
             DatabaseService.Setup();
-            var optionsBuilder = new MqttServerOptionsBuilder().WithDefaultEndpoint().WithDefaultEndpointPort(Port).WithConnectionValidator(async u =>
+            var optionsBuilder = new MqttServerOptionsBuilder().WithDefaultEndpoint().WithDefaultEndpointPort(Port).WithConnectionValidator(u =>
             {
 
                 if (String.IsNullOrWhiteSpace(u.Password) || String.IsNullOrWhiteSpace(u.Username))
@@ -43,15 +43,19 @@ namespace BrokerMqtt
                 }
                 else
                 {
-                    var microcontroller = await DatabaseService.ValidateUser(u.Username, u.Password);
-                    u.ReasonCode = microcontroller != null ? MqttConnectReasonCode.Success : MqttConnectReasonCode.BadUserNameOrPassword;
-                    cache.RegisterConnection(u.ClientId, microcontroller);
-                    DatabaseService.ChangeConnectionStatus(microcontroller, true);
+                    var microcontroller =  DatabaseService.ValidateUser(u.Username, u.Password).Result;
+                    if (microcontroller == null)
+                    {
+                        u.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
+                        return;
+                    }
+                    else
+                    {
+                        u.ReasonCode = MqttConnectReasonCode.Success;
+                        cache.RegisterConnection(u.ClientId, microcontroller);
+                        DatabaseService.ChangeConnectionStatus(microcontroller, true);
+                    }
                 }
-
-
-
-
             }).WithSubscriptionInterceptor(u =>
             {
                 if (u.TopicFilter.ToString() == "invalido")

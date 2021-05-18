@@ -21,6 +21,7 @@ namespace BrokerMqtt
 
         public void RegisterConnection(string clientid, MicroController MCU)
         {
+            if (MCU == null) return;
             cache.Set(clientid, MCU);
             var list = cache.Get<List<string>>(ListKey);
             list.Add(MCU.Id);
@@ -32,6 +33,7 @@ namespace BrokerMqtt
         {
             var MCU = cache.Get<MicroController>(clientid);
             var list = cache.Get<List<string>>(ListKey);
+            if (MCU == null) return null;
             list.Remove(MCU.Id);
             cache.Set(ListKey, list);
             return MCU;

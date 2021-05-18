@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using iEnvironment.RestAPI.Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -94,6 +95,7 @@ namespace iEnvironment.RestAPI
                 });
             });
 
+            services.ConfigureHangfire();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,7 +122,7 @@ namespace iEnvironment.RestAPI
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseHangfire();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

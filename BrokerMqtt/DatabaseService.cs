@@ -30,7 +30,9 @@ namespace BrokerMqtt
             if(mcu != null)
             {
                 var result =  BCrypt.Net.BCrypt.Verify(password, mcu.Password);
-                return mcu;
+                if(result)
+                    return mcu;
+                
             }
 
             return null;

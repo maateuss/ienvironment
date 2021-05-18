@@ -106,5 +106,25 @@ namespace iEnvironment.RestAPI.Controllers
 
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Refresh")]
+        public async Task<ActionResult> Refresh([FromHeader] string authorization)
+        {
+            if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
+            {
+                var token = await cryptoService.RetrieveRefreshToken(headerValue.Parameter);
+                if (token.IsValid())
+                {
+                    var user = await userService.FindByID(token.UserID);
+                    var newToken = cryptoService.GenerateJWT(user);
+                    return Ok(new { token = newToken, refreshToken = headerValue.Parameter });
+                }
+            }
+
+            return new BadRequestResult();
+        }
+
+
     }
 }

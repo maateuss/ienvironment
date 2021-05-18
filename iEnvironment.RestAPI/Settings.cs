@@ -15,6 +15,7 @@ namespace iEnvironment.RestAPI
         public static string AccessKey { get => accessKey; }
         public static string AccessSecret { get => accessSecret; }
         public static string Bucket { get => bucket; }
+        public static string MqttEndpoint { get => mqttEndpoint; }
         public static string S3Prefix { get => s3prefix; }
         public static string Secret { get => secret; }
         private static string mongoConnString { get; set; }
@@ -25,6 +26,7 @@ namespace iEnvironment.RestAPI
         private static string s3prefix { get; set; }
         private static string accessSecret { get; set; }
         private static string bucket { get; set; }
+        private static string mqttEndpoint { get; set; }
         private static string secret { get; set; }
         public static void Configure(IConfiguration configuration)
         {
@@ -36,6 +38,7 @@ namespace iEnvironment.RestAPI
             bucket = configuration["bucket"];
             s3prefix = configuration["s3prefix"];
             secret = configuration["secret"];
+            mqttEndpoint = configuration["mqttEndpoint"];
             refreshTokerValidationHours = int.Parse(configuration["refreshTokenValidationHours"]);
         }
     }

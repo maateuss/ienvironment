@@ -11,10 +11,17 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.13" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.22" />
+    <PackageReference Include="Hangfire.Mongo" Version="0.7.22" />
+    <PackageReference Include="Hangfire" Version="1.7.22" />
+    <PackageReference Include="MQTTnet" Version="3.0.15" />
   </ItemGroup>
 
 
   <ItemGroup>
     <ProjectReference Include="..\iEnvironment.Domain\iEnvironment.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Hangfire\" />
   </ItemGroup>
 </Project>
