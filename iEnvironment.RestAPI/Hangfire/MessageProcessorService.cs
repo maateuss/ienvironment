@@ -13,10 +13,12 @@ namespace iEnvironment.RestAPI.Hangfire
         static ConcurrentQueue<Message> concurrentQueue = new ConcurrentQueue<Message>();
         static object UpdateSensorLock = new object();
         static SensorService sensorService;
+        static HistorianService historianService;
         static MessageProcessorService()
         {
             Task.Factory.StartNew(ProcessMessages);
             sensorService = new SensorService();
+            historianService = new HistorianService();
         }
 
         public static void AddMessage(Message message)
@@ -47,12 +49,13 @@ namespace iEnvironment.RestAPI.Hangfire
             {
                 var sensor = await sensorService.FindByID(sensorid);
 
-                sensor.UpdatedAt = DateTime.Now;
                 sensor.KeepAlive = DateTime.Now;
                 if ((string)sensor.CurrentValue != currentMessage.Payload)
                 {
                     sensor.CurrentValue = currentMessage.Payload;
                 }
+                historianService.Create(sensor, currentMessage.Payload);
+                sensor.UpdatedAt = DateTime.Now;
 
                 await sensorService.Update(sensorid, sensor);
             }
