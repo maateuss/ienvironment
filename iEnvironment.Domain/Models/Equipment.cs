@@ -24,7 +24,7 @@ namespace iEnvironment.Domain.Models
         [BsonIgnore]
         public bool Alive { get => IsAlive(); }
         [BsonElement("connected")]
-        public bool Connected { get; set; }
+        public bool Connected { get => IsAlive(); }
         [BsonElement("currentValue")]
         public object CurrentValue { get; set; }
         [BsonElement("enabled")]

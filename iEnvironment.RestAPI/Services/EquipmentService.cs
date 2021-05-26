@@ -41,8 +41,13 @@ namespace iEnvironment.RestAPI.Services
                 return false;
             }
 
-            var equipmentToUpdate = equipment.ValidateUpdate();
+            T equipmentToUpdate = (T) equipment.ValidateUpdate();
 
+            if(equipmentToUpdate != null)
+            {
+                await Collection.FindOneAndReplaceAsync(x => x.Id == id, equipmentToUpdate);
+            }
+                       
 
             return true;
         }

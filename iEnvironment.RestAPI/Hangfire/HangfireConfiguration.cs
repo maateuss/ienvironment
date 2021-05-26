@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Mongo;
 using Hangfire.Mongo.Migration.Strategies;
@@ -34,5 +35,16 @@ namespace iEnvironment.RestAPI.Hangfire
             app.UseHangfireDashboard();
             app.UseHangfireServer();
         }
+
+        [JobDisplayName("EventProcessor Integrity Check")]
+        public static void StartServices()
+        {
+            MqttListeningService mqttListeningService = new MqttListeningService();
+
+            mqttListeningService.Start();
+        }
+
+
+       
     }
 }
