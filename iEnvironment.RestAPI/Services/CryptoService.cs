@@ -41,8 +41,9 @@ namespace iEnvironment.RestAPI.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                {
-                    new Claim(ClaimTypes.Name, User.Name.ToString()),
-                    new Claim(ClaimTypes.Role, role)
+                   new Claim(ClaimTypes.Name, User.Name.ToString()),
+                   new Claim(ClaimTypes.Role, role),
+                   new Claim("userid", User.Id)
                }),
                 Expires = DateTime.UtcNow.AddHours(6),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

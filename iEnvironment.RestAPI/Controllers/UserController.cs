@@ -133,11 +133,10 @@ namespace iEnvironment.RestAPI.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("me")]
-        public async Task<ActionResult> Me([FromHeader] string authorization)
+        public async Task<ActionResult> Me()
         {
-            if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
-            {
-                var id = User.Claims.FirstOrDefault(x=>x.Type == "UserId").Value;
+            
+                var id = User.Claims.FirstOrDefault(x=>x.Type == "userid").Value;
                 if (!string.IsNullOrWhiteSpace(id))
                 {
                     var user = await userService.FindByID(id);
@@ -146,9 +145,9 @@ namespace iEnvironment.RestAPI.Controllers
 
                     return Ok(new { user, token= newToken, refreshToken= refreshToken.Value });
                 }
-            }
+            
 
-            return new ForbidResult();
+            return new UnauthorizedResult();
 
         }
 
