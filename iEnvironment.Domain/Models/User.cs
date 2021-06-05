@@ -15,8 +15,10 @@ namespace iEnvironment.Domain.Models
         public string Name { get; set; }
         [BsonElement("email")]
         public string Email { get; set; }
+        [JsonIgnore]
         [BsonElement("login")]
         public string Login { get; set; }
+        [JsonIgnore]
         [BsonElement("password")]
         public string Password { get; set; }
         [BsonElement("enabled")]
@@ -36,8 +38,14 @@ namespace iEnvironment.Domain.Models
             return true;
         }
 
-        public User ValidateUserUpdate()
+        public User ValidateUserUpdate(User updatedUser)
         {
+            Name = updatedUser.Name;
+            Email = updatedUser.Email;
+            Login = updatedUser.Login;
+            Img = updatedUser.Img;
+            Enabled = updatedUser.Enabled;
+            Role = updatedUser.Role;
             return this;
         }
     }

@@ -21,7 +21,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpGet]
         [Route("getAll")]
-        [Authorize]
+        [AllowAnonymous]
 
         public async Task<IEnumerable<MicroController>> GetAllMCU()
         {
@@ -30,7 +30,7 @@ namespace iEnvironment.RestAPI.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles="adm")]
+        [AllowAnonymous]
         [Route("create")]
         public async Task<ActionResult> Create([FromBody] MicroController device)
         {
@@ -44,7 +44,7 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [AllowAnonymous]
         [Route("getById/{id}")]
         public async Task<ActionResult<MicroController>> GetById([FromRoute] string id)
         {
@@ -57,7 +57,7 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles="adm")]
+        [AllowAnonymous]
         [Route("edit/{id}")]
         public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] MicroController device)
         {
@@ -71,7 +71,7 @@ namespace iEnvironment.RestAPI.Controllers
 
 
         [HttpDelete]
-        [Authorize(Roles ="adm")]
+        [AllowAnonymous]
         [Route("delete/{id}")]
         public async Task<ActionResult> Delete([FromRoute]string id)
         {

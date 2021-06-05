@@ -3,8 +3,6 @@ namespace iEnvironment.Domain.Models
 {
     public class Token
     {
-        public Token()
-        {
-        }
+        public string RefreshToken { get; set; }
     }
 }

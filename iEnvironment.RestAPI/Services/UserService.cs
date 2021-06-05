@@ -59,7 +59,7 @@ namespace iEnvironment.RestAPI.Services
                 return false;
             }
             
-            var validUser = user.ValidateUserUpdate();
+            var validUser = user.ValidateUserUpdate(currentUser);
             
             if (validUser == null)
             {

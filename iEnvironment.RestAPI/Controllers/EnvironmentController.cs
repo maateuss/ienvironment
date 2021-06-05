@@ -37,7 +37,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpPost]
         [Route("create")]
-        [Authorize(Roles = "adm")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Create(Environments environment)
         {
 
@@ -54,7 +54,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpPut]
         [Route("edit/{id}")]
-        [Authorize(Roles = "adm")]
+        [Authorize(Roles = "admin")]
 
         public async Task<ActionResult> EditEnvironment([FromRoute] string id, [FromBody] Environments environment)
         {

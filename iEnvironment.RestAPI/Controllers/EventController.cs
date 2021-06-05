@@ -60,7 +60,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpDelete]
         [Route("Delete")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<ActionResult> Delete([FromBody] EventDefinition ed, string id)
         {
             if(ed.Id == id)

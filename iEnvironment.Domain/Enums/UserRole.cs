@@ -7,7 +7,7 @@ namespace iEnvironment.Domain.Enums
 {
     public enum UserRole
     {
-        [Description("adm")]
+        [Description("admin")]
         Admin,
         [Description("user")]
         User,

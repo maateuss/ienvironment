@@ -39,9 +39,9 @@ namespace iEnvironment.RestAPI.Hangfire
         [JobDisplayName("EventProcessor Integrity Check")]
         public static void StartServices()
         {
-            MqttListeningService mqttListeningService = new MqttListeningService();
+           // MqttListeningService mqttListeningService = new MqttListeningService();
 
-            mqttListeningService.Start();
+           // mqttListeningService.Start();
         }
 
 

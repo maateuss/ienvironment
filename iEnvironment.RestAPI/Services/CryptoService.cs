@@ -34,23 +34,24 @@ namespace iEnvironment.RestAPI.Services
 
         public string GenerateJWT(User User)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var handler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
+            var role = User.GetClaimAttribute();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                {
                     new Claim(ClaimTypes.Name, User.Name.ToString()),
-                    new Claim(ClaimTypes.Role, User.GetClaimAttribute())
+                    new Claim(ClaimTypes.Role, role)
                }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddHours(6),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
 
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var token = handler.CreateToken(tokenDescriptor);
+            return handler.WriteToken(token);
         }
-
+    
         public async Task<RefreshToken> GenerateRefreshToken(User user)
         {
             var token = new RefreshToken(TimeSpan.FromHours(Settings.RefreshTokerValidationHours), user.Id);

@@ -52,23 +52,12 @@ namespace iEnvironment.RestAPI
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
-                x.Events = new JwtBearerEvents { 
-                    OnAuthenticationFailed = context =>
-                    {
-                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                        {
-                            context.Response.Headers.Add("Token-Expired", "True");
-                        }
-
-                        return Task.CompletedTask;
-                    }
-                };
             });
             services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
-                    Description = "Authorization header using Bearer scheme. Ex: \"Authorization: Bearer {token} \"",
+                    Description = "Authorization header usando o Schema Bearer. Ex: \"Authorization: Bearer {token} \"",
                     Name = "Authorization",
                     In = Microsoft.OpenApi.Models.ParameterLocation.Header,
                     Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,

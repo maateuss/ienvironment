@@ -26,7 +26,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        [Authorize(Roles = "adm,user,broker,guest")]
+        [AllowAnonymous]
         public async Task<IEnumerable<Actuator>> GetAll()
         {
             return await actuatorService.FindAll();
@@ -35,7 +35,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpPost]
         [Route("Create")]
-        [Authorize(Roles = "adm,user,broker,guest")]
+        [AllowAnonymous]
         public async Task<ActionResult> Create([FromBody] Actuator actuator)
         {
             if (actuator == null)
@@ -62,7 +62,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpPut]
         [Route("Update")]
-        [Authorize(Roles = "adm")]
+        [AllowAnonymous]
         public async Task<ActionResult> EditActuator(string id, [FromBody] Actuator actuator)
         {
             if(actuator == null || String.IsNullOrWhiteSpace(id))
@@ -100,7 +100,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpDelete]
         [Route("Delete")]
-        [Authorize(Roles="adm")]
+        [AllowAnonymous]
         public async Task<ActionResult> Delete(string id)
         {
             var valid = await actuatorService.Delete(id);

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace iEnvironment.RestAPI.Controllers
@@ -22,7 +23,7 @@ namespace iEnvironment.RestAPI.Controllers
             cryptoService = new CryptoService();
         }
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<User> Get(string UserID)
         {
             return await userService.FindByID(UserID);
@@ -30,9 +31,9 @@ namespace iEnvironment.RestAPI.Controllers
 
 
         [HttpPost]
-        [Authorize("adm")]
+        [Authorize(Roles = "admin")]
         [Route("create")]
-        public async Task<ActionResult> Create(User user)
+        public async Task<ActionResult> Create([FromBody]User user)
         {
             var created = await userService.CreateNew(user);
             if (created)
@@ -44,7 +45,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpGet]
         [Route("getByLogin/{login}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult<User>> GetByLogin([FromRoute] string login)
         {
             var user = await userService.GetByLogin(login);
@@ -56,19 +57,54 @@ namespace iEnvironment.RestAPI.Controllers
             return Ok(user);
         }
 
-        [HttpPut]
-        [Authorize("adm")]
-        [Route("edit/{id}")]
-        public async Task<ActionResult> EditUser([FromRoute] string id, [FromBody] User user)
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        [Route("edit/{userid}")]
+        public async Task<ActionResult> EditUser([FromRoute] string userid, [FromBody] User userToUpdate)
         {
-            var edited = await userService.EditUser(id, user);
-            if (edited)
-            {
-                return Ok(user);
-            }
 
-            return new BadRequestResult();
+            if (userToUpdate == null) return new UnprocessableEntityObjectResult("user to update is null!");
+            try
+            {
+
+                var edited = await userService.EditUser(userid, userToUpdate);
+                if (edited)
+                {
+                    return Ok(userToUpdate);
+                }
+
+                return new ConflictObjectResult("impossible to update user");
+            }
+            catch
+            {
+                return new BadRequestResult();
+            }
         }
+
+        [HttpPut]
+        [Authorize(Roles = "admin")]
+        [Route("edit/{userid}")]
+        public async Task<ActionResult> PutEditUser([FromRoute] string userid, [FromBody] User userToUpdate)
+        {
+
+            if (userToUpdate == null) return new UnprocessableEntityObjectResult("user to update is null!");
+            try
+            {
+
+                var edited = await userService.EditUser(userid, userToUpdate);
+                if (edited)
+                {
+                    return Ok(JsonConvert.SerializeObject(userToUpdate));
+                }
+
+                return new ConflictObjectResult("impossible to update user");
+            }
+            catch
+            {
+                return new BadRequestResult();
+            }
+        }
+
 
         [HttpPost]
         [Route("login")]
@@ -86,45 +122,54 @@ namespace iEnvironment.RestAPI.Controllers
             return Ok(new { user, token, refreshToken= refreshToken.Value });
         }
 
-        [HttpPost]
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("getallusers")]
+        public async Task<ActionResult> GetAll()
+        {
+            return Ok(JsonConvert.SerializeObject(await userService.FindAll()));
+        }
+
+        [HttpGet]
         [AllowAnonymous]
         [Route("me")]
         public async Task<ActionResult> Me([FromHeader] string authorization)
         {
             if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
             {
-                var token = await cryptoService.RetrieveRefreshToken(headerValue.Parameter);
-                if (token.IsValid())
+                var id = User.Claims.FirstOrDefault(x=>x.Type == "UserId").Value;
+                if (!string.IsNullOrWhiteSpace(id))
                 {
-                    var user = await userService.FindByID(token.UserID);
+                    var user = await userService.FindByID(id);
                     var newToken =  cryptoService.GenerateJWT(user);
-                    return Ok(new { user, token= newToken, refreshToken = headerValue.Parameter });
+                    var refreshToken = await cryptoService.GenerateRefreshToken(user);
+
+                    return Ok(new { user, token= newToken, refreshToken= refreshToken.Value });
                 }
             }
 
-            return new BadRequestResult();
+            return new ForbidResult();
 
         }
 
         [HttpPost]
         [AllowAnonymous]
         [Route("Refresh")]
-        public async Task<ActionResult> Refresh([FromHeader] string authorization)
+        public async Task<ActionResult> Refresh([FromBody] Token refresh)
         {
-            if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
+            if (refresh.RefreshToken != null)
             {
-                var token = await cryptoService.RetrieveRefreshToken(headerValue.Parameter);
+                var token = await cryptoService.RetrieveRefreshToken(refresh.RefreshToken);
                 if (token.IsValid())
                 {
                     var user = await userService.FindByID(token.UserID);
                     var newToken = cryptoService.GenerateJWT(user);
-                    return Ok(new { token = newToken, refreshToken = headerValue.Parameter });
+                    return Ok(new { token = newToken, refreshToken = refresh.RefreshToken });
                 }
             }
 
+
             return new BadRequestResult();
         }
-
-
     }
 }

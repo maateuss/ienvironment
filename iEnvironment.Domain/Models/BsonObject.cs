@@ -13,7 +13,7 @@ namespace iEnvironment.Domain.Models
         public string Id { get; set; }
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         [BsonElement("createdAt")]
-        public DateTime CreatedAt { get; }
+        public DateTime CreatedAt { get; set; } 
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         [BsonElement("updatedAt")]
         public DateTime UpdatedAt { get; set; }

@@ -25,7 +25,7 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [AllowAnonymous]
         [Route("GetAll")]
         public async Task<IEnumerable<Sensor>> GetAll()
         {
@@ -34,7 +34,7 @@ namespace iEnvironment.RestAPI.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles="adm")]
+        [Authorize(Roles = "admin")]
         [Route("Create")]
         public async Task<ActionResult> Create([FromBody] Sensor sensor)
         {
@@ -70,9 +70,9 @@ namespace iEnvironment.RestAPI.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles="adm")]
-        [Route("Update")]
-        public async Task<ActionResult> EditSensor(string id, [FromBody] Sensor sensor)
+        [Authorize(Roles = "admin")]
+        [Route("Update/{id}")]
+        public async Task<ActionResult> EditSensor([FromRoute]string id, [FromBody] Sensor sensor)
         {
             if (sensor == null || String.IsNullOrWhiteSpace(id))
             {
@@ -110,7 +110,7 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpDelete]
-        [Authorize(Roles="adm")]
+        [Authorize(Roles = "admin")]
         [Route("Delete")]
         public async Task<ActionResult> DeleteSensor(string id)
         {

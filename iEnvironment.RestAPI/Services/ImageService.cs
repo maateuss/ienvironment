@@ -67,7 +67,8 @@ namespace iEnvironment.RestAPI.Services
             {
                 throw new Exception("Erro na imagem");
             }
-
+            image.CreatedAt = DateTime.Now;
+            image.UpdatedAt = DateTime.Now;
             Collection.InsertOne(image);
 
             var result = await Collection.Find(x => x.Url == image.Url).FirstOrDefaultAsync();

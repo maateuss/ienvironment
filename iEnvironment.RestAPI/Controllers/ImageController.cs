@@ -23,7 +23,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpPost]
         [Route("UploadPhoto")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<ActionResult<Image>> UploadImage([FromForm] IFormFile file)
         {
             if(file == null)
