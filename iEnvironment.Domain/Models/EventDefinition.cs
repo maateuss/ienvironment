@@ -8,6 +8,8 @@ namespace iEnvironment.Domain.Models
         public string CreatorID { get; set;}
         public string LastUpdateUserID { get; set; }
         public string EnvironmentID { get; set; }
+        public int CoolDownSeconds { get; set; }
+        public bool IsManual { get; set; }
         public string Description { get; set; }
         public bool Enabled { get; set; }
         public List<FlowElement> NodeElements { get; set; }

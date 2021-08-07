@@ -52,6 +52,17 @@ namespace iEnvironment.RestAPI
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+                x.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            context.Response.Headers.Add("Token-Expired", "true");
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
             services.AddSwaggerGen(c =>
             {
@@ -81,6 +92,7 @@ namespace iEnvironment.RestAPI
                 c.AddPolicy("iEnvironment Policy", builder =>
                 {
                     builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
                     builder.AllowAnyOrigin();
                 });
             });

@@ -131,21 +131,24 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize]
         [Route("me")]
         public async Task<ActionResult> Me()
         {
-            
-                var id = User.Claims.FirstOrDefault(x=>x.Type == "userid").Value;
+            try { 
+                var id = User.Claims.FirstOrDefault(x => x.Type == "userid").Value;
                 if (!string.IsNullOrWhiteSpace(id))
                 {
                     var user = await userService.FindByID(id);
-                    var newToken =  cryptoService.GenerateJWT(user);
+                    var newToken = cryptoService.GenerateJWT(user);
                     var refreshToken = await cryptoService.GenerateRefreshToken(user);
 
-                    return Ok(new { user, token= newToken, refreshToken= refreshToken.Value });
+                    return Ok(new { user, token = newToken, refreshToken = refreshToken.Value });
                 }
-            
+            }
+            catch (Exception ex){
+                return new UnauthorizedObjectResult(ex.Message);
+            }
 
             return new UnauthorizedResult();
 

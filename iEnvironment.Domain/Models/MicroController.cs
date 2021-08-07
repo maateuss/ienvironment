@@ -19,6 +19,9 @@ namespace iEnvironment.Domain.Models
         [BsonElement("connected")]
         public bool Connected { get; set; } = false;
 
+        [BsonElement("img")]
+        public Image Img { get; set; }
+
         [BsonElement("login")]
         public string Login { get; set; }
 
