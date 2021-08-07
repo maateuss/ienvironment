@@ -23,7 +23,9 @@ namespace iEnvironment.RestAPI.Controllers
             microControllerService = new MCUService();
             environmentService = new EnvironmentService();
         }
-
+        /// <summary>
+        /// Listar todos os Atuadores
+        /// </summary>
         [HttpGet]
         [Route("GetAll")]
         [AllowAnonymous]

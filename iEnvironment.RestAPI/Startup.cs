@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Hangfire;
@@ -86,6 +88,9 @@ namespace iEnvironment.RestAPI
                         }, new string[] { }
                     }
                 });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
             services.AddCors(c =>
             {
@@ -98,6 +103,8 @@ namespace iEnvironment.RestAPI
             });
 
             services.ConfigureHangfire();
+
+          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
