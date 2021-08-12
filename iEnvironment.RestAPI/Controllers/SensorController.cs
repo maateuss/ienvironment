@@ -11,6 +11,7 @@ namespace iEnvironment.RestAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
     public class SensorController
     {
         private SensorService sensorService;
@@ -25,20 +26,45 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize]
         [Route("GetAll")]
         public async Task<IEnumerable<Sensor>> GetAll()
         {
             return await sensorService.FindAll();
         }
 
-
+        /// <summary>
+        /// Cadastro de novo sensor
+        /// </summary>
+        /// <remarks>
+        /// Exemplo de requisição:
+        ///
+        ///
+        ///     POST /Create
+        ///     {
+        ///         "measurementUnit": "Nadas por minuto",
+        ///         "defaultTriggersActive": false,
+        ///         "limitUp": null,
+        ///         "limitDown": null,
+        ///         "name": "Nome do sensor",
+        ///         "description": "Descrição do sensor",
+        ///         "entityType": 0,
+        ///         "environmentId": "604bf393b46162214e9f05ca",
+        ///         "enabled": true,
+        ///         "simulationMode": false,
+        ///         "microcontrollerID": "60a3bf68ee5c5fcf3fcded4f",
+        ///         "autoDisconnectSeconds": 300
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="sensor"> entity type = String = 0,Int = 1,Boolean = 2,Numeric = 3 esse parametro será o tipo a ser considerado nos triggers limitup e limitdown caso aplicavel.</param>
+        /// <returns>O sensor cadastrado</returns>
         [HttpPost]
         [Authorize(Roles = "admin")]
         [Route("Create")]
         public async Task<ActionResult> Create([FromBody] Sensor sensor)
         {
-            if (sensor == null || String.IsNullOrEmpty(sensor.MicrocontrollerID) )
+            if (sensor == null || string.IsNullOrEmpty(sensor.MicrocontrollerID) || string.IsNullOrEmpty(sensor.EnvironmentId))
             {
                 return new UnprocessableEntityResult();
             }
@@ -50,7 +76,15 @@ namespace iEnvironment.RestAPI.Controllers
                 return new BadRequestResult();
             }
 
+            var Environment = await environmentService.FindByID(sensor.EnvironmentId);
 
+            if(Environment == null)
+            {
+                return new BadRequestObjectResult("Invalid EnvironmentID");
+            }
+
+
+            sensor.CreatedAt = DateTime.Now;
             var inserted = await sensorService.Create(sensor);
 
             if (inserted == null)
@@ -61,7 +95,7 @@ namespace iEnvironment.RestAPI.Controllers
 
 
             await microControllerService.AddEquipmentReference(inserted.MicrocontrollerID, inserted.Id);
-
+            await environmentService.AddEquipmentReference(inserted.EnvironmentId, inserted.Id);
             return new OkObjectResult(inserted);
 
 

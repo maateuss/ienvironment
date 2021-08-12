@@ -12,6 +12,7 @@ namespace iEnvironment.RestAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
     public class ImageController : ControllerBase
     {
         private ImageService imageService;

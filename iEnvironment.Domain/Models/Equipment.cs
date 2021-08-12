@@ -20,6 +20,8 @@ namespace iEnvironment.Domain.Models
         {
             return $"sinal/{MicrocontrollerID}/{Id}/";
         }
+        [BsonElement("environmentId")]
+        public string EnvironmentId { get; set; }
 
         [BsonIgnore]
         public bool Alive { get => IsAlive(); }

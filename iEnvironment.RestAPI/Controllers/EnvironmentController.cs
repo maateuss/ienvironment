@@ -11,6 +11,7 @@ namespace iEnvironment.RestAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
     public class EnvironmentController : ControllerBase
     {
         private EnvironmentService environmentService;

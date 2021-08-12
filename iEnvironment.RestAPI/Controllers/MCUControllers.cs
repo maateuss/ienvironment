@@ -11,6 +11,7 @@ namespace iEnvironment.RestAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
     public class MCUControllers : ControllerBase
     {
         private MCUService microControllerService;
@@ -21,7 +22,7 @@ namespace iEnvironment.RestAPI.Controllers
 
         [HttpGet]
         [Route("getAll")]
-        [AllowAnonymous]
+        [Authorize]
 
         public async Task<IEnumerable<MicroController>> GetAllMCU()
         {
@@ -30,7 +31,7 @@ namespace iEnvironment.RestAPI.Controllers
 
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         [Route("create")]
         public async Task<ActionResult> Create([FromBody] MicroController device)
         {
@@ -44,7 +45,7 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize]
         [Route("getById/{id}")]
         public async Task<ActionResult<MicroController>> GetById([FromRoute] string id)
         {
@@ -57,7 +58,7 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpPut]
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         [Route("edit/{id}")]
         public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] MicroController device)
         {
@@ -71,7 +72,7 @@ namespace iEnvironment.RestAPI.Controllers
 
 
         [HttpDelete]
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         [Route("delete/{id}")]
         public async Task<ActionResult> Delete([FromRoute]string id)
         {

@@ -17,6 +17,7 @@
     <PackageReference Include="Hangfire.Mongo" Version="0.7.22" />
     <PackageReference Include="Hangfire" Version="1.7.22" />
     <PackageReference Include="MQTTnet" Version="3.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.17" />
   </ItemGroup>
 
 
@@ -25,5 +26,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Hangfire\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
   </ItemGroup>
 </Project>

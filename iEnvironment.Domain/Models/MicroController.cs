@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,6 +27,7 @@ namespace iEnvironment.Domain.Models
         public string Login { get; set; }
 
         [BsonElement("password")]
+        [JsonIgnore]
         public string Password { get; set; }
 
         [BsonElement("equipments")]

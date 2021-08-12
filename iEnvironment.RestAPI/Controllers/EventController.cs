@@ -9,6 +9,7 @@ namespace iEnvironment.RestAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
     public class EventController : ControllerBase
     {
         private EventService _eventService;

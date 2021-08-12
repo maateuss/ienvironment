@@ -68,5 +68,14 @@ namespace iEnvironment.RestAPI.Services
             return true;
         }
 
+        internal async Task AddEquipmentReference(string environmentId, string EquipmentId)
+        {
+            var environment = await Collection.Find(x => x.Id == environmentId).FirstOrDefaultAsync();
+            environment.AddEquipment(EquipmentId);
+            Collection.FindOneAndReplace(x => x.Id == environmentId, environment);
+        }
+
+
+
     }
 }

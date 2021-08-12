@@ -13,6 +13,7 @@ namespace iEnvironment.RestAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
     public class UserController : ControllerBase
     {
         private UserService userService;
@@ -22,6 +23,8 @@ namespace iEnvironment.RestAPI.Controllers
             userService = new UserService();
             cryptoService = new CryptoService();
         }
+
+
         [HttpGet]
         [Authorize]
         public async Task<User> Get(string UserID)
@@ -94,7 +97,7 @@ namespace iEnvironment.RestAPI.Controllers
                 var edited = await userService.EditUser(userid, userToUpdate);
                 if (edited)
                 {
-                    return Ok(JsonConvert.SerializeObject(userToUpdate));
+                    return Ok(userToUpdate);
                 }
 
                 return new ConflictObjectResult("impossible to update user");
@@ -127,7 +130,7 @@ namespace iEnvironment.RestAPI.Controllers
         [Route("getallusers")]
         public async Task<ActionResult> GetAll()
         {
-            return Ok(JsonConvert.SerializeObject(await userService.FindAll()));
+            return Ok(await userService.FindAll());
         }
 
         [HttpGet]

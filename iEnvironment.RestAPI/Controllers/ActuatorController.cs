@@ -10,6 +10,7 @@ namespace iEnvironment.RestAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
     public class ActuatorController
     {
         private ActuatorService actuatorService;
@@ -28,16 +29,38 @@ namespace iEnvironment.RestAPI.Controllers
         /// </summary>
         [HttpGet]
         [Route("GetAll")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IEnumerable<Actuator>> GetAll()
         {
             return await actuatorService.FindAll();
         }
 
 
+        /// <summary>
+        /// Cadastro de novo atuador
+        /// </summary>
+        /// <remarks>
+        /// Exemplo de requisição:
+        ///
+        ///
+        ///     POST /Create
+        ///     {
+        ///         "name": "Nome do atuador",
+        ///         "description": "Descrição do atuador",
+        ///         "entityType": 0,
+        ///         "environmentId": "604bf393b46162214e9f05ca",
+        ///         "enabled": true,
+        ///         "simulationMode": false,
+        ///         "microcontrollerID": "60a3bf68ee5c5fcf3fcded4f",
+        ///         "autoDisconnectSeconds": 300
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="actuator"> entity type = String = 0,Int = 1,Boolean = 2,Numeric = 3 esse parametro será o tipo de dado a ser enviado para o atuador.</param>
+        /// <returns>O atuador cadastrado</returns>
         [HttpPost]
         [Route("Create")]
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Create([FromBody] Actuator actuator)
         {
             if (actuator == null)
@@ -49,14 +72,26 @@ namespace iEnvironment.RestAPI.Controllers
             if (Mcu == null)
             {
                 return new BadRequestResult();
+            } 
+
+            var Environment = await environmentService.FindByID(actuator.EnvironmentId);
+
+            actuator.CreatedAt = DateTime.Now;
+            if (Environment == null)
+            {
+                return new BadRequestObjectResult("Invalid EnvironmentID");
             }
 
-            var inserted = await actuatorService.Create(actuator);
 
+
+            var inserted = await actuatorService.Create(actuator);
             if (inserted == null)
             {
                 return new BadRequestResult();
             }
+
+            await environmentService.AddEquipmentReference(inserted.EnvironmentId, inserted.Id);
+            await microControllerService.AddEquipmentReference(inserted.MicrocontrollerID, inserted.Id);
 
             return new OkObjectResult(inserted);
         }
