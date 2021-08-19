@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace iEnvironment.RestAPI.Controllers
 {
@@ -155,6 +156,25 @@ namespace iEnvironment.RestAPI.Controllers
 
             return new UnauthorizedResult();
 
+        }
+
+
+        [HttpDelete]
+        [Authorize(Roles = "admin")]
+        [Route("Delete/{id}")]
+        public async Task<ActionResult> Delete([FromRoute] string id)
+        {
+        if (!string.IsNullOrEmpty(id))
+        {
+            var deleted = await userService.Delete(id);
+            if (deleted)
+            {
+                return new OkObjectResult("User deleted");
+            }
+            return new NotFoundObjectResult("User not found");
+        }
+
+        return new BadRequestObjectResult("Id invalido");
         }
 
         [HttpPost]
