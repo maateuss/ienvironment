@@ -123,7 +123,37 @@ namespace iEnvironment.Watchman
             var sensorid = currentMessage.GetEquipmentId();
             try
             {
+                if(sensorid.Length != 24) { Console.WriteLine("invalid eqpid"); return; }
+
                 Sensor sensor = await HardwareManager.FindByID(sensorid);
+                if(sensor == null)
+                {
+                    Console.WriteLine($"eqp {sensorid} not found");
+                    return;
+                }
+                
+                if (sensor.DefaultTriggersActive && int.TryParse(currentMessage.Payload, out int value))
+                {
+                    var lowerTrigger = Convert.ToInt32(sensor.LimitDown);
+                    var upperTrigger = Convert.ToInt32(sensor.LimitUp);
+                    if(upperTrigger > lowerTrigger )
+                    {
+                        if (value > upperTrigger)
+                        {
+                            await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+                                .WithTopic($"alert/upperlimit/eqp/{sensorid}")
+                                .WithPayload($"{value} received, over {upperTrigger} constraint")
+                                .Build());
+                        }
+                        else if(value < lowerTrigger)
+                        {
+                            await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+                                .WithTopic($"alert/lowerlimit/eqp/{sensorid}")
+                                .WithPayload($"{value} received, under {lowerTrigger} constraint")
+                                .Build());
+                        }
+                    }
+                }
 
                 sensor.KeepAlive = DateTime.Now;
                 if ((string)sensor.CurrentValue != currentMessage.Payload)
