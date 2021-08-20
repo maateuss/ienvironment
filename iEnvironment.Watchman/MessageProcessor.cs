@@ -23,14 +23,15 @@ namespace iEnvironment.Watchman
         public static IMqttClient mqttClient;
         public List<(string Topic, bool Connected)> TopicsDict = new List<(string, bool)>();
         public bool Status { get => mqttClient?.IsConnected ?? false; }
-
-        public MessageProcessor(string brokerUrl, int? port)
+        private DataManager dataManager;
+        private HardwareManager HardwareManager;
+        public MessageProcessor(WorkerOptions settings)
         {
             if (options == null)
             {
                 options = new MqttClientOptionsBuilder()
                   .WithClientId("EventProcessor")
-                  .WithTcpServer(brokerUrl, port)
+                  .WithTcpServer(settings.MqttEndpoint,settings.MqttPort)
                   .WithCredentials("atmega2560", "123456")
                   .WithCleanSession()
                   .Build();
@@ -46,7 +47,8 @@ namespace iEnvironment.Watchman
 
             queueShouldRun = true;
             Task.Factory.StartNew(ProcessQueue);
-
+            dataManager = new DataManager(settings);
+            HardwareManager = new HardwareManager(settings);
             Start();
         }
 
@@ -67,7 +69,7 @@ namespace iEnvironment.Watchman
                     Console.WriteLine(currentMessage.Topic);
                     if (currentMessage.TryGetEquipmentId(out string equipmentid))
                     {
-                        //UpdateSensor(currentMessage);
+                        UpdateSensor(currentMessage);
                     }
                 }
             }
@@ -128,7 +130,7 @@ namespace iEnvironment.Watchman
                 {
                     sensor.CurrentValue = currentMessage.Payload;
                 }
-                DataManager.Create(sensor, currentMessage.Payload);
+                dataManager.Create(sensor, currentMessage.Payload);
                 sensor.UpdatedAt = DateTime.Now;
 
                 await HardwareManager.Update(sensorid, sensor);

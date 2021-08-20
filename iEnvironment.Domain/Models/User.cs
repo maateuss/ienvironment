@@ -15,10 +15,8 @@ namespace iEnvironment.Domain.Models
         public string Name { get; set; }
         [BsonElement("email")]
         public string Email { get; set; }
-        [JsonIgnore]
         [BsonElement("login")]
         public string Login { get; set; }
-        [JsonIgnore]
         [BsonElement("password")]
         public string Password { get; set; }
         [BsonElement("enabled")]
@@ -27,6 +25,9 @@ namespace iEnvironment.Domain.Models
         public Image Img { get; set; }
 
         public UserRole Role { get; set; }
+
+        public bool ShouldSerializePassword() { return false; }
+        public bool ShouldSerializeLogin() { return false; }
 
         public string GetClaimAttribute()
         {

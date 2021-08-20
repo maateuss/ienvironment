@@ -8,11 +8,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.18" />
     <PackageReference Include="MQTTnet" Version="3.0.16" />
+    <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\iEnvironment.Domain\iEnvironment.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="MQTTnet" />
+    <None Remove="MongoDB.Driver" />
   </ItemGroup>
 </Project>

@@ -15,9 +15,9 @@ namespace iEnvironment.Watchman
         private readonly WorkerOptions options;
         public Worker(ILogger<Worker> logger, WorkerOptions options)
         {
-            Processor = new MessageProcessor(options.MqttEndpoint, options.MqttPort);
             _logger = logger;
             this.options = options;
+            Processor = new MessageProcessor(options);
             Processor.Start();
         }
 

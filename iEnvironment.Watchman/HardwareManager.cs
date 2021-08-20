@@ -1,23 +1,43 @@
 ﻿using System;
 using System.Threading.Tasks;
 using iEnvironment.Domain.Models;
+using MongoDB.Driver;
 
 namespace iEnvironment.Watchman
 {
-    public class HardwareManager
+    public class HardwareManager : DatabaseContext
     {
-        public HardwareManager()
+
+        IMongoCollection<Sensor> Collection;
+
+        public HardwareManager(WorkerOptions workerOptions) : base(workerOptions)
         {
+            Collection = database.GetCollection<Sensor>("sensor");
         }
 
-        internal static Task Update(string sensorid, object sensor)
+        internal async Task<bool> Update(string sensorid, Sensor sensor)
         {
-            throw new NotImplementedException();
+            var currentEquipment = await Collection.Find(x => x.Id == sensorid).FirstOrDefaultAsync();
+
+            if (currentEquipment == null)
+            {
+                return false;
+            }
+
+            Equipment equipmentToUpdate = sensor.ValidateUpdate();
+
+            if (equipmentToUpdate != null)
+            {
+                await Collection.FindOneAndReplaceAsync(x => x.Id == sensorid, equipmentToUpdate as Sensor);
+            }
+
+
+            return true;
         }
 
-        internal static Task<Sensor> FindByID(string sensorid)
+        internal async Task<Sensor> FindByID(string sensorid)
         {
-            throw new NotImplementedException();
+            return await Collection.Find(x => x.Id == sensorid).FirstOrDefaultAsync();
         }
     }
 }
