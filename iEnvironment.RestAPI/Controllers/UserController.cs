@@ -166,6 +166,11 @@ namespace iEnvironment.RestAPI.Controllers
         {
         if (!string.IsNullOrEmpty(id))
         {
+            var current = await userService.FindByID(id);
+            if(current == null)
+            {
+                return new NotFoundObjectResult("User not found");
+            }
             var deleted = await userService.Delete(id);
             if (deleted)
             {

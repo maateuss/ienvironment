@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "iEnvironment.Watchman": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
