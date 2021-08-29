@@ -5,14 +5,14 @@ using MongoDB.Driver;
 
 namespace iEnvironment.RestAPI.Services
 {
-    public class EventService : BaseService<EventDefinition>
+    public class EventService : BaseService<Event>
     {
         public EventService() : base("events")
         {
 
         }
 
-        public async Task<EventDefinition> Create(EventDefinition ed)
+        public async Task<Event> Create(Event ed)
         {
             var duplicate = await Collection.Find(x => x.Id == ed.Id).FirstOrDefaultAsync();
             if (duplicate != null)
@@ -21,18 +21,13 @@ namespace iEnvironment.RestAPI.Services
 
             }
 
-            var valid = ed.ValidateNewEventDefinition();
-
-            if (valid)
-            {
                 Collection.InsertOne(ed);
-            }
 
             return await Collection.Find(x => x.Id == ed.Id).FirstOrDefaultAsync();
         }
 
 
-        public async Task<bool> Update(EventDefinition ed)
+        public async Task<bool> Update(Event ed)
         {
             var currentEventDefinition = await Collection.Find(x => x.Id == ed.Id).FirstOrDefaultAsync();
 
@@ -41,7 +36,7 @@ namespace iEnvironment.RestAPI.Services
                 return false;
             }
 
-            var valid = ed.ValidateEventDefinitionUpdate();
+            var valid = ed.ValidateEventDefinitionUpdate(currentEventDefinition);
 
             if(valid != null)
             {

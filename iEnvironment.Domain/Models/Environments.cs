@@ -43,6 +43,25 @@ namespace iEnvironment.Domain.Models
             return true;
         }
 
+        public bool AddEvent(string id)
+        {
+            if (Events.Any(x => x == id))
+            {
+                return false;
+            }
+            Events.Add(id);
+            return true;
+        }
+
+        public bool RemoveEvent(string id)
+        {
+            if (!Events.Any(x => x == id))
+            {
+                return false;
+            }
+            Events.Remove(id);
+            return true;
+        }
 
         public bool ValidateNewEnvironment()
         {

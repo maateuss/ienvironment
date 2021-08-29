@@ -7,9 +7,11 @@ namespace iEnvironment.Domain.Models
         public string Topic { get; set; }
         public bool IsValid()
         {
-            return Payload.StartsWith("sinal/");
+            return Payload.StartsWith("sinal/") || Payload.StartsWith("action/");
         }
 
+        public bool IsSensor { get => Topic.StartsWith("sinal/"); }
+        public bool IsActuator { get => Topic.StartsWith("action/"); }
         public bool TryGetMicroControllerId(out string microcontrollerId)
         {
             microcontrollerId = string.Empty;

@@ -98,7 +98,7 @@ namespace iEnvironment.RestAPI.Controllers
                 var edited = await userService.EditUser(userid, userToUpdate);
                 if (edited)
                 {
-                    return Ok(userToUpdate);
+                    return Ok();
                 }
 
                 return new ConflictObjectResult("impossible to update user");

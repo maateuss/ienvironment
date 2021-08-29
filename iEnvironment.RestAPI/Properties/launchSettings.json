@@ -40,7 +40,7 @@
       "commandName": "Project",
       "launchBrowser": false,
       "launchUrl": "/",
-      "applicationUrl": "https://localhost:2121;http://localhost:2109",
+      "applicationUrl": "http://localhost:2109",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

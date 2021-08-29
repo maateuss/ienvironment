@@ -8,16 +8,18 @@ namespace iEnvironment.Watchman
     public class HardwareManager : DatabaseContext
     {
 
-        IMongoCollection<Sensor> Collection;
+        IMongoCollection<Sensor> SensorCollection;
+        IMongoCollection<Actuator> AtuadorCollection;
 
         public HardwareManager(WorkerOptions workerOptions) : base(workerOptions)
         {
-            Collection = database.GetCollection<Sensor>("sensor");
+            SensorCollection = database.GetCollection<Sensor>("sensor");
+            AtuadorCollection = database.GetCollection<Actuator>("actuator");
         }
 
         internal async Task<bool> Update(string sensorid, Sensor sensor)
         {
-            var currentEquipment = await Collection.Find(x => x.Id == sensorid).FirstOrDefaultAsync();
+            var currentEquipment = await SensorCollection.Find(x => x.Id == sensorid).FirstOrDefaultAsync();
 
             if (currentEquipment == null)
             {
@@ -28,16 +30,44 @@ namespace iEnvironment.Watchman
 
             if (equipmentToUpdate != null)
             {
-                await Collection.FindOneAndReplaceAsync(x => x.Id == sensorid, equipmentToUpdate as Sensor);
+                await SensorCollection.FindOneAndReplaceAsync(x => x.Id == sensorid, equipmentToUpdate as Sensor);
             }
 
 
             return true;
         }
 
-        internal async Task<Sensor> FindByID(string sensorid)
+        internal async Task<bool> UpdateActuador(string actuadorId, Actuator actuatur)
         {
-            return await Collection.Find(x => x.Id == sensorid).FirstOrDefaultAsync();
+            var currentEquipment = await AtuadorCollection.Find(x => x.Id == actuadorId).FirstOrDefaultAsync();
+
+            if (currentEquipment == null)
+            {
+                return false;
+            }
+
+            Equipment equipmentToUpdate = actuatur.ValidateUpdate();
+
+            if (equipmentToUpdate != null)
+            {
+                await AtuadorCollection.FindOneAndReplaceAsync(x => x.Id == actuadorId, equipmentToUpdate as Actuator);
+            }
+
+
+            return true;
         }
+
+
+
+        internal async Task<Sensor> FindSensorById(string sensorid)
+        {
+            return await SensorCollection.Find(x => x.Id == sensorid).FirstOrDefaultAsync();
+        }
+
+        internal async Task<Actuator> FindActuatorById(string actuatorid)
+        {
+            return await AtuadorCollection.Find(x => x.Id == actuatorid).FirstOrDefaultAsync();
+        }
+
     }
 }

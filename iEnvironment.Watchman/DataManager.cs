@@ -15,7 +15,7 @@ namespace iEnvironment.Watchman
         }
 
 
-        internal async Task Create(Sensor currentValue, string newValue)
+        internal async Task Create(Equipment currentValue, string newValue)
         {
             if (currentValue.UpdatedAt < DateTime.Now.AddMinutes(-1) || (string)currentValue.CurrentValue != newValue)
             {

@@ -16,7 +16,7 @@ namespace iEnvironment.Domain.Models
         [BsonElement("topic")]
         public string Topic { get => GetTopic(); }
 
-        private string GetTopic()
+        public virtual string GetTopic()
         {
             return $"sinal/{MicrocontrollerID}/{Id}/";
         }

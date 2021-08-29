@@ -75,6 +75,28 @@ namespace iEnvironment.RestAPI.Services
             Collection.FindOneAndReplace(x => x.Id == environmentId, environment);
         }
 
+        internal async Task RemoveEquipmentReference(string environmentId, string EquipmentId)
+        {
+            var environment = await Collection.Find(x => x.Id == environmentId).FirstOrDefaultAsync();
+            environment.RemoveEquipment(EquipmentId);
+            Collection.FindOneAndReplace(x => x.Id == environmentId, environment);
+        }
+
+
+        internal async Task AddEventReference(string environmentId, string EventId)
+        {
+            var environment = await Collection.Find(x => x.Id == environmentId).FirstOrDefaultAsync();
+            environment.AddEvent(EventId);
+            Collection.FindOneAndReplace(x => x.Id == environmentId, environment);
+        }
+
+        internal async Task RemoveEventReference(string environmentId, string EventId)
+        {
+            var environment = await Collection.Find(x => x.Id == environmentId).FirstOrDefaultAsync();
+            environment.RemoveEvent(EventId);
+            Collection.FindOneAndReplace(x => x.Id == environmentId, environment);
+        }
+
 
 
     }

@@ -69,7 +69,10 @@ namespace iEnvironment.Watchman
                     Console.WriteLine(currentMessage.Topic);
                     if (currentMessage.TryGetEquipmentId(out string equipmentid))
                     {
-                        UpdateSensor(currentMessage);
+                        if (currentMessage.IsSensor)
+                            UpdateSensor(currentMessage);
+                        else if (currentMessage.IsActuator)
+                            UpdateActuator(currentMessage);
                     }
                 }
             }
@@ -100,6 +103,7 @@ namespace iEnvironment.Watchman
             TopicsDict = new List<(string Topic, bool Connected)>();
             TopicsDict.Add(("mgmt/", false));
             TopicsDict.Add(("sinal/#", false));
+            TopicsDict.Add(("action/#", false));
         }
 
 
@@ -125,7 +129,7 @@ namespace iEnvironment.Watchman
             {
                 if(sensorid.Length != 24) { Console.WriteLine("invalid eqpid"); return; }
 
-                Sensor sensor = await HardwareManager.FindByID(sensorid);
+                Sensor sensor = await HardwareManager.FindSensorById(sensorid);
                 if(sensor == null)
                 {
                     Console.WriteLine($"eqp {sensorid} not found");
@@ -170,6 +174,39 @@ namespace iEnvironment.Watchman
                 Console.WriteLine("Error updating sensor " + sensorid);
             }
         }
+
+        async void UpdateActuator(Message currentMessage)
+        {
+            var actuatorId = currentMessage.GetEquipmentId();
+            try
+            {
+                if (actuatorId.Length != 24) { Console.WriteLine("invalid eqpid"); return; }
+
+                Actuator actuator = await HardwareManager.FindActuatorById(actuatorId);
+                if (actuator == null)
+                {
+                    Console.WriteLine($"eqp {actuatorId} not found");
+                    return;
+                }
+
+     
+
+                actuator.KeepAlive = DateTime.Now;
+                if ((string)actuator.CurrentValue != currentMessage.Payload)
+                {
+                    actuator.CurrentValue = currentMessage.Payload;
+                }
+                dataManager.Create(actuator, currentMessage.Payload);
+                actuator.UpdatedAt = DateTime.Now;
+
+                await HardwareManager.UpdateActuador(actuatorId, actuator);
+            }
+            catch
+            {
+                Console.WriteLine("Error updating actuator " + actuatorId);
+            }
+        }
+
 
         async Task Connect()
         {

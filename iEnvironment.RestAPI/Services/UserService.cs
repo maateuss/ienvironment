@@ -15,6 +15,7 @@ namespace iEnvironment.RestAPI.Services
         }
 
         private CryptoService cryptoService;
+
         public async Task<bool> CreateNew(User user)
         {
             if (!String.IsNullOrWhiteSpace(user.Id))
@@ -59,12 +60,15 @@ namespace iEnvironment.RestAPI.Services
                 return false;
             }
             
-            var validUser = user.ValidateUserUpdate(currentUser);
+            var validUser = currentUser.ValidateUserUpdate(user);
             
             if (validUser == null)
             {
                 return false;
             }
+
+            validUser.Id = id;
+            validUser.UpdatedAt = DateTime.Now;
             
             await Collection.FindOneAndReplaceAsync(x => x.Id == id, validUser);
             return true;

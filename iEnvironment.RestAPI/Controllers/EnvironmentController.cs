@@ -34,6 +34,29 @@ namespace iEnvironment.RestAPI.Controllers
             return await environmentService.FindAll();
         }
 
+        [HttpDelete]
+        [Authorize(Roles = "admin")]
+        [Route("Delete/{id}")]
+        public async Task<ActionResult> Delete([FromRoute] string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var current = await environmentService.FindByID(id);
+                if (current == null)
+                {
+                    return new NotFoundObjectResult("ambiente não encontrado");
+                }
+                var deleted = await environmentService.Delete(id);
+                if (deleted)
+                {
+                    return new OkObjectResult("ambiente deletado");
+                }
+                return new NotFoundObjectResult("ambiente não encontrado");
+            }
+
+            return new BadRequestObjectResult("Id invalido");
+
+        }
 
 
         [HttpPost]

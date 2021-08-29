@@ -21,5 +21,10 @@ namespace iEnvironment.Domain.Models
         {
             return this;
         }
+
+        public override string GetTopic()
+        {
+            return base.GetTopic().Replace("sinal", "action");
+        }
     }
 }

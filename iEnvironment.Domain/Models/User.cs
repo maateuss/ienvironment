@@ -26,8 +26,6 @@ namespace iEnvironment.Domain.Models
 
         public UserRole Role { get; set; }
 
-        public bool ShouldSerializePassword() { return false; }
-        public bool ShouldSerializeLogin() { return false; }
 
         public string GetClaimAttribute()
         {
@@ -43,10 +41,10 @@ namespace iEnvironment.Domain.Models
         {
             Name = updatedUser.Name;
             Email = updatedUser.Email;
-            Login = updatedUser.Login;
             Img = updatedUser.Img;
             Enabled = updatedUser.Enabled;
             Role = updatedUser.Role;
+            Id = updatedUser.Id;
             return this;
         }
     }

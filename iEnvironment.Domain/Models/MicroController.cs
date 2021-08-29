@@ -27,7 +27,6 @@ namespace iEnvironment.Domain.Models
         public string Login { get; set; }
 
         [BsonElement("password")]
-        [JsonIgnore]
         public string Password { get; set; }
 
         [BsonElement("equipments")]
