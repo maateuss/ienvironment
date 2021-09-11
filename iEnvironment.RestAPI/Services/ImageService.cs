@@ -44,6 +44,7 @@ namespace iEnvironment.RestAPI.Services
             }
             
             image.FileName = fileName;
+            image.AltName = file.FileName;
             image.Size = Convert.ToInt32(file.Length);
             image.Url = Settings.S3Prefix + image.FileName;
 

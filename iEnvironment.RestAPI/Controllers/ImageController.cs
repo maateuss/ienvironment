@@ -41,5 +41,13 @@ namespace iEnvironment.RestAPI.Controllers
             return new OkObjectResult(result);
         }
 
+        [HttpGet]
+        [Route("GetAll")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<Image>> GetAll()
+        {
+            return await imageService.FindAll();
+        }
+
     }
 }
