@@ -42,6 +42,13 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        public async Task<Image> Get(string ImageID)
+        {
+            return await imageService.FindByID(ImageID);
+        }
+
+        [HttpGet]
         [Route("GetAll")]
         [AllowAnonymous]
         public async Task<IEnumerable<Image>> GetAll()
