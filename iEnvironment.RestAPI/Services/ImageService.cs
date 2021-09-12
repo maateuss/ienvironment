@@ -77,5 +77,32 @@ namespace iEnvironment.RestAPI.Services
             return result;
         }
 
+        public async Task<bool> DeleteObjectNonVersionedBucketAsync(Image image)
+        {
+            try
+            {
+                var deleteObjectRequest = new DeleteObjectRequest
+                {
+                    BucketName = Settings.Bucket,
+                    Key = image.FileName
+                };
+
+                await AwsClient.DeleteObjectAsync(deleteObjectRequest);
+
+                var result = base.Delete(image.Id);
+
+                return result.Result;
+            }
+            catch (AmazonS3Exception e)
+            {
+                Console.WriteLine("Error encountered on server. Message:'{0}' when deleting an object", e.Message);
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unknown encountered on server. Message:'{0}' when deleting an object", e.Message);
+                return false;
+            }
+        }
     }
 }

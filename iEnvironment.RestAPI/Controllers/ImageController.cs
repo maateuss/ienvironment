@@ -49,5 +49,29 @@ namespace iEnvironment.RestAPI.Controllers
             return await imageService.FindAll();
         }
 
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public async Task<ActionResult> Delete([FromRoute] string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var current = await imageService.FindByID(id);
+                if (current == null)
+                {
+                    return new NotFoundObjectResult("Image not found");
+                }
+
+                var deleted = await imageService.DeleteObjectNonVersionedBucketAsync(current);
+
+                if (deleted)
+                {
+                    return new OkObjectResult("Image deleted");
+                }
+                return new NotFoundObjectResult("Image not found");
+            }
+
+            return new BadRequestObjectResult("Id invalido");
+        }
+
     }
 }
