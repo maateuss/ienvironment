@@ -12,7 +12,7 @@ namespace iEnvironment.RestAPI.Controllers
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
-    public class SensorController
+    public class SensorController : ControllerBase
     {
         private SensorService sensorService;
         private MCUService microControllerService;
@@ -32,6 +32,18 @@ namespace iEnvironment.RestAPI.Controllers
         {
             return await sensorService.FindAll();
         }
+
+        [HttpGet]
+        [Route("GetByEnvironmentId/{id}")]
+        [Authorize]
+        public async Task<ActionResult> GetByEnvironmentId([FromRoute] string id)
+        {
+            var events = await sensorService.FindAll();
+            var filtered = events.Where(x => x.EnvironmentId == id);
+            return Ok(filtered);
+        }
+
+
 
         /// <summary>
         /// Cadastro de novo sensor

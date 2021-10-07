@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrokerMqtt", "BrokerMqtt\Br
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iEnvironment.Watchman", "iEnvironment.Watchman\iEnvironment.Watchman.csproj", "{4705B041-492E-43C5-9532-D7B10F178D32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainTests", "DomainTests\DomainTests.csproj", "{DB67146F-F6D5-4C71-B1C1-46608F4DDEBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{4705B041-492E-43C5-9532-D7B10F178D32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4705B041-492E-43C5-9532-D7B10F178D32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4705B041-492E-43C5-9532-D7B10F178D32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB67146F-F6D5-4C71-B1C1-46608F4DDEBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB67146F-F6D5-4C71-B1C1-46608F4DDEBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB67146F-F6D5-4C71-B1C1-46608F4DDEBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB67146F-F6D5-4C71-B1C1-46608F4DDEBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

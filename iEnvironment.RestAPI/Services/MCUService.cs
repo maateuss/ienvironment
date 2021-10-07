@@ -64,14 +64,16 @@ namespace iEnvironment.RestAPI.Services
             var currentMicroController = await Collection.Find(x => x.Id == id).FirstOrDefaultAsync();
             if (currentMicroController == null) return false;
 
-            var validUpdate = device.ValidateMCUUpdate();
-            if (validUpdate != null)
-            {
-                await Collection.FindOneAndReplaceAsync(x => x.Id == id, validUpdate);
-                return true;
-            }
+            currentMicroController.Name = device.Name;
+            currentMicroController.Description = device.Description;
+            if (!string.IsNullOrEmpty(device.Password)) currentMicroController.Password = cryptoService.HashPassword(device.Password);
+            if (!string.IsNullOrEmpty(device.Login)) currentMicroController.Login = device.Login;
+            if (device.Img != null) currentMicroController.Img = device.Img;
 
-            return false;
+
+                
+                await Collection.FindOneAndReplaceAsync(x => x.Id == id, currentMicroController);
+                return true;
         }
 
         internal async Task UpdateEquipmentReference(string oldId, string newId, string eqpId)

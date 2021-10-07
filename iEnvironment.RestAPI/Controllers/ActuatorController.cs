@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using iEnvironment.Domain.Models;
 using iEnvironment.RestAPI.Services;
@@ -11,7 +12,7 @@ namespace iEnvironment.RestAPI.Controllers
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
-    public class ActuatorController
+    public class ActuatorController : ControllerBase
     {
         private ActuatorService actuatorService;
 
@@ -34,6 +35,20 @@ namespace iEnvironment.RestAPI.Controllers
         {
             return await actuatorService.FindAll();
         }
+
+        /// <summary>
+        /// Listar todos os Atuadores que pertencem a esse ambiente
+        /// </summary>
+        [HttpGet]
+        [Route("GetByEnvironmentId/{id}")]
+        [Authorize]
+        public async Task<ActionResult> GetByEnvironmentId([FromRoute] string id)
+        {
+            var events = await actuatorService.FindAll();
+            var filtered = events.Where(x => x.EnvironmentId == id);
+            return Ok(filtered);
+        }
+
 
 
         /// <summary>

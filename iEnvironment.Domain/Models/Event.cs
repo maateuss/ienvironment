@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 namespace iEnvironment.Domain.Models
 {
     public class Event : BsonObject
@@ -26,6 +27,51 @@ namespace iEnvironment.Domain.Models
 
 
             return this;
+        }
+
+        public bool ShouldRun(DateTime TimeToCheckIfShouldRun)
+        {
+            if (!TimeBased) return false;
+
+            if (!RunningDays?.Contains(TimeToCheckIfShouldRun.DayOfWeek) ?? true) return false;
+
+
+            int startDateConverted = ExtractHoursAndMinutes(StartTime);
+
+
+            int endDateConverted = ExtractHoursAndMinutes(EndTime);
+
+            bool startIsAfterEnd = false;
+
+            if (startDateConverted > endDateConverted) startIsAfterEnd = true;
+
+            int timeToCheckConveted = ExtractHoursAndMinutes($"{TimeToCheckIfShouldRun.Hour}:{TimeToCheckIfShouldRun.Minute}");
+
+            if (startIsAfterEnd)
+            {
+                if (timeToCheckConveted > endDateConverted && timeToCheckConveted < startDateConverted) return false;
+            }
+            else
+            {
+                if (timeToCheckConveted > endDateConverted || timeToCheckConveted < startDateConverted) return false;
+            }
+
+            return true;
+        }
+
+        private int ExtractHoursAndMinutes(string time)
+        {
+            var splitted = time.Split(":");
+
+            if (int.TryParse(splitted[0], out int hours))
+            {
+                if (int.TryParse(splitted[1], out int minutes))
+                {
+                    return (hours * 60 + minutes);
+                }
+            }
+
+            return 0;
         }
     }
 
@@ -58,4 +104,7 @@ namespace iEnvironment.Domain.Models
         And = 0,
         Or = 1
     }
+
+
+
 }

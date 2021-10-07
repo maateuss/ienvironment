@@ -17,6 +17,7 @@ namespace iEnvironment.Watchman
     public class MessageProcessor
     {
         bool queueShouldRun;
+        bool timeBasedShouldRun; 
         ManualResetEvent manualResetEvent = new ManualResetEvent(false);
         ConcurrentQueue<Message> concurrentQueue = new ConcurrentQueue<Message>();
         public static IMqttClientOptions options;
@@ -25,6 +26,8 @@ namespace iEnvironment.Watchman
         public bool Status { get => mqttClient?.IsConnected ?? false; }
         private DataManager dataManager;
         private HardwareManager HardwareManager;
+        private EventManager eventManager;
+        private ActuatorManager actuatorManager;
         public MessageProcessor(WorkerOptions settings)
         {
             if (options == null)
@@ -46,9 +49,13 @@ namespace iEnvironment.Watchman
 
 
             queueShouldRun = true;
+            timeBasedShouldRun = true;
             Task.Factory.StartNew(ProcessQueue);
+            Task.Factory.StartNew(ProcessTimeBasedEvent);
+
             dataManager = new DataManager(settings);
             HardwareManager = new HardwareManager(settings);
+            eventManager = new EventManager(settings);
             Start();
         }
 
@@ -56,6 +63,45 @@ namespace iEnvironment.Watchman
         {
             concurrentQueue.Enqueue(message);
             manualResetEvent.Set();
+        }
+
+        private async void ProcessTimeBasedEvent()
+        {
+            while (timeBasedShouldRun)
+            {
+                var listOfEvents = await eventManager.GetTimeBasedEvents();
+
+
+                var listOfTopics = new List<(string topic, string payload)>();
+             
+                
+
+
+
+                foreach (var item in listOfEvents)
+                {
+                    foreach (var acts in item.WhatExecute)
+                    {
+                        var topic = await actuatorManager.GetTopicById(acts.ActuatorId);
+                        listOfTopics.Add((topic, acts.Value));
+                    }
+
+                }
+
+
+                foreach (var item in listOfTopics)
+                {
+                    await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
+                               .WithTopic($"{item.topic}")
+                               .WithPayload($"{item.payload}")
+                               .Build());
+                }
+
+           
+
+
+                Thread.Sleep(TimeSpan.FromMinutes(1));
+            }
         }
 
 

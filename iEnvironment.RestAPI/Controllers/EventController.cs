@@ -111,6 +111,18 @@ namespace iEnvironment.RestAPI.Controllers
 
             
         }
+
+
+        [HttpGet]
+        [Route("GetByEnvironmentId/{id}")]
+        [Authorize]
+        public async Task<ActionResult> GetByEnvironmentId([FromRoute] string id)
+        {
+            var events = await _eventService.FindAll();
+            var filtered = events.Where(x => x.EnvironmentID == id);
+            return Ok(filtered);
+        }
+
         [HttpGet]
         [Route("RaiseManualEvent/{id}")]
         [Authorize]
