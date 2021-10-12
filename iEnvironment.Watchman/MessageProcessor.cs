@@ -50,12 +50,16 @@ namespace iEnvironment.Watchman
 
             queueShouldRun = true;
             timeBasedShouldRun = true;
-            Task.Factory.StartNew(ProcessQueue);
-            Task.Factory.StartNew(ProcessTimeBasedEvent);
 
             dataManager = new DataManager(settings);
             HardwareManager = new HardwareManager(settings);
             eventManager = new EventManager(settings);
+            actuatorManager = new ActuatorManager(settings);
+
+            Task.Factory.StartNew(ProcessQueue);
+            Task.Factory.StartNew(ProcessTimeBasedEvent);
+
+          
             Start();
         }
 
