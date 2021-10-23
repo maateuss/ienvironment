@@ -57,14 +57,12 @@ namespace iEnvironment.RestAPI.Services
                 return false;
             }
 
-            var validEnvironment = env.ValidateEnvironmentUpdate();
+            currentEnvironment.Name = env.Name ?? currentEnvironment.Name;
+            currentEnvironment.Description = env.Description ?? currentEnvironment.Description;
+            currentEnvironment.Enabled = env.Enabled;
 
-            if (validEnvironment == null)
-            {
-                return false;
-            }
-
-            await Collection.FindOneAndReplaceAsync(x => x.Id == id, validEnvironment);
+      
+            await Collection.FindOneAndReplaceAsync(x => x.Id == id, currentEnvironment);
             return true;
         }
 

@@ -34,6 +34,19 @@ namespace iEnvironment.RestAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [Route("getById/{id}")]
+        public async Task<ActionResult> GetById([FromRoute] string id)
+        {
+            var result = await sensorService.FindByID(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return NotFound();
+        }
+
+        [HttpGet]
         [Route("GetByEnvironmentId/{id}")]
         [Authorize]
         public async Task<ActionResult> GetByEnvironmentId([FromRoute] string id)
@@ -131,9 +144,16 @@ namespace iEnvironment.RestAPI.Controllers
             {
                 return new BadRequestResult();
             }
+            Sensor currentEqp = new Sensor();
 
-            var currentEqp = await sensorService.FindByID(id);
-
+            try
+            {
+                currentEqp = await sensorService.FindByID(id);
+            }
+            catch
+            {
+                return new NotFoundObjectResult("Sensor não encontrado");
+            }
             
 
             var valid = await sensorService.Update(id, sensor);

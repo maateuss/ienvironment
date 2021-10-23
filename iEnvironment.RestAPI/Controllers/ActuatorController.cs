@@ -49,6 +49,22 @@ namespace iEnvironment.RestAPI.Controllers
             return Ok(filtered);
         }
 
+        /// <summary>
+        /// Listar atuador pelo seu ID
+        /// </summary>
+        [HttpGet]
+        [Authorize]
+        [Route("getById/{id}")]
+        public async Task<ActionResult> GetById([FromRoute] string id)
+        {
+            var result = await actuatorService.FindByID(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return NotFound();
+        }
+
 
 
         /// <summary>

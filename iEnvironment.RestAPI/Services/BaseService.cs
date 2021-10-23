@@ -19,6 +19,7 @@ namespace iEnvironment.RestAPI.Services
             Collection = database.GetCollection<T>(collectionName);
         }
 
+
         public async Task<IEnumerable<T>> FindAll()
         {
             return await Collection.Find(x=>true).ToListAsync();

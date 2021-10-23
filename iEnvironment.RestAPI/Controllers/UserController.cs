@@ -35,7 +35,6 @@ namespace iEnvironment.RestAPI.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
         [Route("create")]
         public async Task<ActionResult> Create([FromBody]User user)
         {

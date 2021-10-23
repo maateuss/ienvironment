@@ -15,9 +15,13 @@ namespace iEnvironment.RestAPI.Controllers
     public class EnvironmentController : ControllerBase
     {
         private EnvironmentService environmentService;
+        private EventService eventService;
+        private SensorService sensorService;
         public EnvironmentController()
         {
             environmentService = new EnvironmentService();
+            eventService = new EventService();
+            sensorService = new SensorService();
         }
         [HttpGet]
         [Authorize]
@@ -32,6 +36,36 @@ namespace iEnvironment.RestAPI.Controllers
         public async Task<IEnumerable<Environments>> GetAll()
         {
             return await environmentService.FindAll();
+        }
+
+        [HttpGet]
+        [Route("Dashboard")]
+        [Authorize]
+        public async Task<ActionResult> GetDashboard()
+        {
+            var envs = await environmentService.FindAll();
+            var viewModels = new List<EnvironmentViewModel>();
+            foreach (var item in envs)
+            {
+                var sensorList = new List<Sensor>();
+                var eventList = new List<Event>();
+                foreach (var sens in item.Equipments)
+                {
+                    var sensor = await sensorService.FindByID(sens);
+                    if (sensor != null) sensorList.Add(sensor);
+                }
+
+                foreach (var evt in item.Events)
+                {
+                    var fullEvent = await eventService.FindByID(evt);
+                    if (fullEvent != null) eventList.Add(fullEvent);
+                }
+
+                viewModels.Add(new EnvironmentViewModel(item, sensorList, eventList));
+            }
+
+
+            return new OkObjectResult(viewModels);
         }
 
         [HttpDelete]

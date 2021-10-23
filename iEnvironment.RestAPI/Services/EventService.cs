@@ -29,12 +29,23 @@ namespace iEnvironment.RestAPI.Services
 
         public async Task<bool> Update(Event ed)
         {
+
             var currentEventDefinition = await Collection.Find(x => x.Id == ed.Id).FirstOrDefaultAsync();
 
             if(currentEventDefinition  == null)
             {
                 return false;
             }
+
+
+            if (ed.Name != null)
+            {
+                currentEventDefinition.Name = ed.Name;
+            }
+
+            currentEventDefinition.Description = ed.Description != null ? ed.Description : currentEventDefinition.Description;
+            
+
 
             var valid = ed.ValidateEventDefinitionUpdate(currentEventDefinition);
 

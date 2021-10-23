@@ -37,6 +37,19 @@ namespace iEnvironment.RestAPI.Controllers
             return await _eventService.FindAll();
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("getById/{id}")]
+        public async Task<ActionResult> GetById([FromRoute] string id)
+        {
+            var result = await _eventService.FindByID(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return NotFound();
+        }
+
         [HttpPost]
         [Route("create")]
         [Authorize]

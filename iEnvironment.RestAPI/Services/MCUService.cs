@@ -63,15 +63,14 @@ namespace iEnvironment.RestAPI.Services
         {
             var currentMicroController = await Collection.Find(x => x.Id == id).FirstOrDefaultAsync();
             if (currentMicroController == null) return false;
-
+            currentMicroController.Enabled = device.Enabled;
             currentMicroController.Name = device.Name;
             currentMicroController.Description = device.Description;
+            
             if (!string.IsNullOrEmpty(device.Password)) currentMicroController.Password = cryptoService.HashPassword(device.Password);
             if (!string.IsNullOrEmpty(device.Login)) currentMicroController.Login = device.Login;
             if (device.Img != null) currentMicroController.Img = device.Img;
 
-
-                
                 await Collection.FindOneAndReplaceAsync(x => x.Id == id, currentMicroController);
                 return true;
         }

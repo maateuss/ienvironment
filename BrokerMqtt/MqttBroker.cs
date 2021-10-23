@@ -35,6 +35,12 @@ namespace BrokerMqtt
             DatabaseService.Setup();
             var optionsBuilder = new MqttServerOptionsBuilder().WithDefaultEndpoint().WithDefaultEndpointPort(Port).WithConnectionValidator(u =>
             {
+                if (u.ClientId.StartsWith("Mobile+"))
+                {
+                    u.ReasonCode = MqttConnectReasonCode.Success;
+                    return;
+                }
+
 
                 if (String.IsNullOrWhiteSpace(u.Password) || String.IsNullOrWhiteSpace(u.Username))
                 {
@@ -66,6 +72,11 @@ namespace BrokerMqtt
                 return;
             }).WithApplicationMessageInterceptor(u =>
             {
+                if (u.ClientId.StartsWith("Mobile+"))
+                {
+                    u.AcceptPublish = false;
+                    return;
+                }
                 if (u.ApplicationMessage.Payload != null)
                 {
                     if (u.ApplicationMessage.Payload.Length > 200)

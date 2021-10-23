@@ -74,4 +74,24 @@ namespace iEnvironment.Domain.Models
         }
 
     }
+
+    public class EnvironmentViewModel
+    {
+        public EnvironmentViewModel(Environments env, List<Sensor> sensors, List<Event> events)
+        {
+            Name = env.Name;
+            Description = env.Description;
+            Img = env.Img;
+            Enabled = env.Enabled;
+            Sensor = sensors ?? new List<Sensor>();
+            Events = events ?? new List<Event>();
+        }
+
+        public string Name { get; }
+        public string Description { get; }
+        public List<Sensor> Sensor { get; }
+        public List<Event> Events { get; } 
+        public bool Enabled { get;}
+        public Image Img { get; }
+    }
 }
