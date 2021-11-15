@@ -30,8 +30,8 @@ namespace iEnvironment.RestAPI.Services
             var image = new Image();
             var extension = Path.GetExtension(file.FileName);
             var fileName = DateTime.Now.ToLongTimeString().Replace(".", "").Replace(":", "").Replace(" ", "") + file.FileName;
-
-
+            
+         
             StringBuilder sb = new StringBuilder();
 
             using (HashAlgorithm algorithm = SHA256.Create()) {

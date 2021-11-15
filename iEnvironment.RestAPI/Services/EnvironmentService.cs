@@ -60,7 +60,7 @@ namespace iEnvironment.RestAPI.Services
             currentEnvironment.Name = env.Name ?? currentEnvironment.Name;
             currentEnvironment.Description = env.Description ?? currentEnvironment.Description;
             currentEnvironment.Enabled = env.Enabled;
-
+            currentEnvironment.Img = env.Img ?? currentEnvironment.Img;
       
             await Collection.FindOneAndReplaceAsync(x => x.Id == id, currentEnvironment);
             return true;

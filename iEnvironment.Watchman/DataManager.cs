@@ -8,19 +8,21 @@ namespace iEnvironment.Watchman
     public class DataManager : DatabaseContext
     {
         IMongoCollection<DataVariation> Collection;
+        IMongoCollection<Environments> EnvironmentCollections;
 
         public DataManager(WorkerOptions workerOptions) : base(workerOptions)
         {
             Collection = database.GetCollection<DataVariation>("historical");
+            EnvironmentCollections = database.GetCollection<Environments>("environments");
         }
 
 
-        internal async Task Create(Equipment currentValue, string newValue)
+        internal async Task Create(Equipment currentValue, string newValue, string message = null)
         {
-            if (currentValue.UpdatedAt < DateTime.Now.AddMinutes(-1) || (string)currentValue.CurrentValue != newValue)
-            {
-                await Collection.InsertOneAsync(new DataVariation(currentValue.Id, newValue));
-            }
+            var environment = await EnvironmentCollections.Find(x => x.Id == (currentValue.EnvironmentId ?? "")).FirstOrDefaultAsync();
+            
+            await Collection.InsertOneAsync(new DataVariation(currentValue.Id, newValue, currentValue.Name, environment.Name ?? "", message ?? ""));
+            
         }
     }
 }

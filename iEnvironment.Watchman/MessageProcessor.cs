@@ -35,7 +35,6 @@ namespace iEnvironment.Watchman
                 options = new MqttClientOptionsBuilder()
                   .WithClientId("EventProcessor")
                   .WithTcpServer(settings.MqttEndpoint,settings.MqttPort)
-                  .WithCredentials("atmega2560", "123456")
                   .WithCleanSession()
                   .Build();
             }
@@ -164,7 +163,7 @@ namespace iEnvironment.Watchman
 
             try
             {
-                await mqttClient.ConnectAsync(options, CancellationToken.None);
+                var result = await mqttClient.ConnectAsync(options, CancellationToken.None);
             }
             catch
             {
@@ -175,6 +174,7 @@ namespace iEnvironment.Watchman
         async void UpdateSensor(Message currentMessage)
         {
             var sensorid = currentMessage.GetEquipmentId();
+            string customMessage = "";
             try
             {
                 if(sensorid.Length != 24) { Console.WriteLine("invalid eqpid"); return; }
@@ -194,6 +194,7 @@ namespace iEnvironment.Watchman
                     {
                         if (value > upperTrigger)
                         {
+                            customMessage = $"{value} recebido, acima do limite superior configurado de {upperTrigger}";
                             await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
                                 .WithTopic($"alert/upperlimit/eqp/{sensorid}")
                                 .WithPayload($"{value} received, over {upperTrigger} constraint")
@@ -201,6 +202,7 @@ namespace iEnvironment.Watchman
                         }
                         else if(value < lowerTrigger)
                         {
+                            customMessage = $"{value} recebido, abaixo do limite inferior configurado de {lowerTrigger}";
                             await mqttClient.PublishAsync(new MqttApplicationMessageBuilder()
                                 .WithTopic($"alert/lowerlimit/eqp/{sensorid}")
                                 .WithPayload($"{value} received, under {lowerTrigger} constraint")
@@ -214,7 +216,7 @@ namespace iEnvironment.Watchman
                 {
                     sensor.CurrentValue = currentMessage.Payload;
                 }
-                dataManager.Create(sensor, currentMessage.Payload);
+                dataManager.Create(sensor, currentMessage.Payload, customMessage);
                 sensor.UpdatedAt = DateTime.Now;
 
                 await HardwareManager.Update(sensorid, sensor);

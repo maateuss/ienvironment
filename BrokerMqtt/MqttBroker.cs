@@ -35,6 +35,12 @@ namespace BrokerMqtt
             DatabaseService.Setup();
             var optionsBuilder = new MqttServerOptionsBuilder().WithDefaultEndpoint().WithDefaultEndpointPort(Port).WithConnectionValidator(u =>
             {
+                if(u.ClientId == "EventProcessor")
+                {
+                    u.ReasonCode = MqttConnectReasonCode.Success;
+                    return;
+                }
+
                 if (u.ClientId.StartsWith("Mobile+"))
                 {
                     u.ReasonCode = MqttConnectReasonCode.Success;

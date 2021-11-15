@@ -19,10 +19,12 @@ namespace iEnvironment.RestAPI.Controllers
     {
         private UserService userService;
         private CryptoService cryptoService;
+        private ManagementService managementService;
         public UserController()
         {
             userService = new UserService();
             cryptoService = new CryptoService();
+            managementService  = new ManagementService();
         }
 
 
@@ -44,6 +46,15 @@ namespace iEnvironment.RestAPI.Controllers
                 return new OkResult();
             }
             return new BadRequestResult();
+        }
+
+        [HttpGet]
+        [Route("FetchMqttServerAddress")]
+        public async Task<ActionResult> FetchMqttInfo()
+        {
+            var info = await managementService.FetchInfo();
+            return new OkObjectResult(new { mqttBrokerAddress=info.BackendUrl});
+            
         }
 
         [HttpGet]
