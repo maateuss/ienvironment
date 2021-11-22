@@ -15,7 +15,7 @@ namespace iEnvironment.RestAPI
         public static string AccessKey { get => accessKey; }
         public static string AccessSecret { get => accessSecret; }
         public static string Bucket { get => bucket; }
-        public static string MqttEndpoint { get => mqttEndpoint; }
+        public static string MqttEndpoint { get => mqttEndpoint; set => mqttEndpoint = value; }
         public static int MqttPort { get => mqttPort; }
         public static string S3Prefix { get => s3prefix; }
         public static string Secret { get => secret; }

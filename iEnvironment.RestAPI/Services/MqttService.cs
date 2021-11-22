@@ -10,6 +10,7 @@ namespace iEnvironment.RestAPI.Services
     public class MqttService
     {
         public static IMqttClientOptions options;
+        private readonly ManagementService managementService;
         public static IMqttClient mqttClient;
         public MqttService()
         {
