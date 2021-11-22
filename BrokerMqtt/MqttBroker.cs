@@ -40,13 +40,19 @@ namespace BrokerMqtt
                     u.ReasonCode = MqttConnectReasonCode.Success;
                     return;
                 }
-
+		if (u.ClientId.StartsWith("Mqttx")){
+			u.ReasonCode = MqttConnectReasonCode.Success;
+			return;
+		}
                 if (u.ClientId.StartsWith("Mobile+"))
                 {
                     u.ReasonCode = MqttConnectReasonCode.Success;
                     return;
                 }
-
+		if (u.ClientId.StartsWith("ApiManager")){
+			u.ReasonCode = MqttConnectReasonCode.Success;
+			return;
+		}
 
                 if (String.IsNullOrWhiteSpace(u.Password) || String.IsNullOrWhiteSpace(u.Username))
                 {
