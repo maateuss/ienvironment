@@ -22,11 +22,12 @@ namespace iEnvironment.Watchman
             var filter = Builders<Event>.Filter.Eq(x => x.TimeBased, true);
 
             var elements = await Collection.Find(filter).ToListAsync() ;
-
+		
             foreach (var item in elements)
             {
-                if (item.ShouldRun(DateTime.Now))
+                if (item.ShouldRun(DateTime.Now.AddHours(-3)))
                 {
+		    Console.WriteLine(item.ToString());
                     list.Add(item);
                 }
             }
@@ -76,5 +77,5 @@ namespace iEnvironment.Watchman
 
     }
 
-
 }
+    
