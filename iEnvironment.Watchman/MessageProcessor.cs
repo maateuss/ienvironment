@@ -163,7 +163,7 @@ namespace iEnvironment.Watchman
 
             try
             {
-                var result = await mqttClient.ConnectAsync(options, CancellationToken.None);
+                await Connect();
             }
             catch
             {
